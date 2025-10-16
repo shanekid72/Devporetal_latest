@@ -1,0 +1,10 @@
+services:
+  devportal:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: devportal:latest
+    container_name: devportal-app
+    ports:
+      - "3010:80"
+    restart: unless-stopped

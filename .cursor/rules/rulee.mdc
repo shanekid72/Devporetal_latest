@@ -1,0 +1,72 @@
+---
+alwaysApply: true
+---
+# Development and Coding Guidelines
+
+## Workflow and Planning
+
+- First, think through the problem carefully.
+- Read the relevant parts of the codebase before making any changes.
+- Write a detailed plan of tasks in this file (tasks/todo.md).
+- Always ask questions if anything is unclear; never assume.
+- The plan should list actionable todo items that can be checked off as they are completed.
+- Before starting work, present the plan for verification.
+- After verification, begin working on the todo items sequentially.
+- Mark tasks as complete as you go.
+- At every step, give a high-level explanation of what changes you made.
+- Keep every change as simple as possible, minimizing code affected.
+- Security must be tight and production-ready under all circumstances.
+- Before coding, adopt the mindset of "What would Mark Zuckerberg do in this situation?"
+- After coding, thoroughly review the code for security best practices, ensuring no vulnerabilities or sensitive information exposure (e.g., no secrets, no .env files leaked).
+- Before pushing to GitHub, double-check for security and correctness.
+- Explain in detail what functionality was built, how it works, and walk through the code as if teaching a novice.
+- Add a review section at the bottom of this file summarizing completed changes.
+- Always check for syntax errors after writing code.
+
+## Coding Environment and Technologies
+
+- ReactJS, NextJS, JavaScript, TypeScript, HTML, CSS.
+- Modern UI/UX frameworks (e.g., TailwindCSS, Shadcn, Radix).
+- Optionally, Framer Motion and Three.js for animations.
+
+## Testing Preferences
+
+- Always test new features and changes.
+- Always test fixes after implementation.
+- Perform a build after a minimum of 5 changes have been completed.
+- Define "change" as a committed code modification that affects functionality or UI.
+
+## Code Implementation Guidelines
+
+- Prefer early returns for readability.
+- Favor simple solutions over complex ones.
+- Avoid duplicated code; reuse existing code if possible.
+- Account for different environments: development, testing, production.
+- Make only necessary changes related to the task, no unrelated modifications.
+- When fixing bugs, try using existing patterns before introducing new ones.
+- Keep the code clean and organized.
+- Avoid scripts that run only once inside the codebase; use external scripts or manual processes.
+- Limit files to 200-300 lines; refactor when longer.
+- Mock data only for tests; never mock in dev or prod environments.
+- Never overwrite `.env` files without explicit confirmation.
+- Maintain DRY (Don't Repeat Yourself) principles.
+- Ensure all changes and code are complete with no placeholders or todos left.
+- Properly import all used modules and name components clearly.
+- Always prioritize readability over cleverness or performance.
+- If uncertain about requirements or details, ask clarifying questions before coding.
+
+## Additional Best Practices
+
+- Add a mandatory code review step before pushing code to main branches.
+- Incorporate automated testing (unit, integration, E2E) as part of development workflow.
+- Define and follow a branching strategy (feature branches, clear commit messages, pull requests).
+- Perform a security checklist before every release (dependency scan, secrets check, input validation).
+- Update documentation (inline comments, READMEs) when changing or adding features.
+- Optionally perform performance profiling on critical features.
+- Test on development, staging, and production-like environments before deployment.
+
+---
+
+# Review
+
+- (To be filled out after completing the work, summarizing the changes made, security checks, testing outcomes, and any relevant notes.)
