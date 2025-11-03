@@ -14,6 +14,7 @@ interface MainLayoutProps {
   theme: Theme;
   onThemeToggle: () => void;
   hideNavigation?: boolean;
+  showSidebar?: boolean;
 }
 
 const MainLayout = ({ 
@@ -21,6 +22,7 @@ const MainLayout = ({
   theme, 
   onThemeToggle,
   hideNavigation = false,
+  showSidebar = true,
 }: MainLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
@@ -29,7 +31,7 @@ const MainLayout = ({
   
   // Handle closing sidebar when clicking outside on mobile
   useEffect(() => {
-    if (hideNavigation) return;
+    if (hideNavigation || !showSidebar) return;
 
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -45,7 +47,7 @@ const MainLayout = ({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [sidebarOpen, hideNavigation]);
+  }, [sidebarOpen, hideNavigation, showSidebar]);
 
   // Handle Command Palette keyboard shortcut (CMD+K / Ctrl+K)
   useEffect(() => {
@@ -128,30 +130,34 @@ const MainLayout = ({
   return (
     <div className="flex h-screen bg-white dark:bg-gray-950 relative">
 
-      {/* Sidebar backdrop overlay (mobile) */}
-      <AnimatePresence>
-        {sidebarOpen && (
-          <motion.div
-            className="fixed inset-0 z-20 lg:hidden bg-gray-900/50 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            onClick={() => setSidebarOpen(false)}
-          />
-        )}
-      </AnimatePresence>
+      {/* Sidebar backdrop overlay (mobile) - only show if showSidebar is true */}
+      {showSidebar && (
+        <AnimatePresence>
+          {sidebarOpen && (
+            <motion.div
+              className="fixed inset-0 z-20 lg:hidden bg-gray-900/50 backdrop-blur-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
+        </AnimatePresence>
+      )}
 
-      {/* Sidebar */}
-      <motion.div
-        className={`fixed z-30 inset-y-0 left-0 w-64 transform transition-transform duration-300 ease-in-out 
-          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
-          lg:translate-x-0 lg:static lg:inset-0 
-          bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 overflow-y-auto`}
-        initial={false}
-      >
-        <Sidebar onClose={() => setSidebarOpen(false)} />
-      </motion.div>
+      {/* Sidebar - only show if showSidebar is true */}
+      {showSidebar && (
+        <motion.div
+          className={`fixed z-30 inset-y-0 left-0 w-64 transform transition-transform duration-300 ease-in-out 
+            ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
+            lg:translate-x-0 lg:static lg:inset-0 
+            bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 overflow-y-auto`}
+          initial={false}
+        >
+          <Sidebar onClose={() => setSidebarOpen(false)} />
+        </motion.div>
+      )}
 
       {/* Main content */}
       <div ref={mainRef} className="flex-1 flex flex-col relative z-10 overflow-hidden">
@@ -159,6 +165,7 @@ const MainLayout = ({
           theme={theme}
           onThemeToggle={onThemeToggle}
           onMenuClick={() => setSidebarOpen(true)}
+          showHamburger={showSidebar}
         />
         
         <main className="flex-1 overflow-y-auto scroll-smooth relative" data-scroll>

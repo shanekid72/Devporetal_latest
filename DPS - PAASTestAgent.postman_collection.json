@@ -1,0 +1,1753 @@
+{
+	"info": {
+		"_postman_id": "80d90b24-6e4f-4437-8b97-2b057075e446",
+		"name": "DPS - PAASTestAgent",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "40007243"
+	},
+	"item": [
+		{
+			"name": "Token",
+			"item": [
+				{
+					"name": "KeyCloak - PaaSTestAgent",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    var body = JSON.parse(responseBody);\r",
+									"    var content = body[\"access_token\"];\r",
+									"\r",
+									"    pm.environment.set(\"access_token\", content);\r",
+									"\r",
+									"    console.log();\r",
+									"\r",
+									"\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "testpaasagentae",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "TestPaaSAgentAE098",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "cdp_app",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "mSh18BPiMZeQqFfOvWhgv8wzvnNVbj3Y",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{Host}}/auth/realms/cdp/protocol/openid-connect/token",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"auth",
+								"realms",
+								"cdp",
+								"protocol",
+								"openid-connect",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Codes-Rates",
+			"item": [
+				{
+					"name": "Get Codes",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "testpaasagentae"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784835"
+							},
+							{
+								"key": "branch",
+								"value": "784836"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/codes",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"codes"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "id_types",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Service Corridor",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "testpaasagentae"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784835"
+							},
+							{
+								"key": "branch",
+								"value": "784836"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/service-corridor",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"service-corridor"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Rates",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "testpaasagentae"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784835"
+							},
+							{
+								"key": "branch",
+								"value": "784836"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/rates",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"rates"
+							],
+							"query": [
+								{
+									"key": "receiving_currency_code",
+									"value": "PKR",
+									"disabled": true
+								},
+								{
+									"key": "receiving_country_code",
+									"value": "PK",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MasterBanks",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    var body = JSON.parse(responseBody);\r",
+									"   \r",
+									"    console.log();\r",
+									"\r",
+									"\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "sender",
+								"value": "testagentae",
+								"disabled": true
+							},
+							{
+								"key": "channel",
+								"value": "Direct",
+								"disabled": true
+							},
+							{
+								"key": "company",
+								"value": "784825",
+								"disabled": true
+							},
+							{
+								"key": "branch",
+								"value": "784826",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/master/banks?receiving_country_code=PK&receiving_mode=CASHPICKUP",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"master",
+								"banks"
+							],
+							"query": [
+								{
+									"key": "receiving_country_code",
+									"value": "PK"
+								},
+								{
+									"key": "correspondent",
+									"value": "RR",
+									"disabled": true
+								},
+								{
+									"key": "receiving_mode",
+									"value": "CASHPICKUP"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MasterBanks - ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    var body = JSON.parse(responseBody);\r",
+									"   \r",
+									"    console.log();\r",
+									"\r",
+									"\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "sender",
+								"value": "testagentae",
+								"disabled": true
+							},
+							{
+								"key": "channel",
+								"value": "Direct",
+								"disabled": true
+							},
+							{
+								"key": "company",
+								"value": "784825",
+								"disabled": true
+							},
+							{
+								"key": "branch",
+								"value": "784826",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/master/banks/11232",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"master",
+								"banks",
+								"11232"
+							],
+							"query": [
+								{
+									"key": "receiving_country_code",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "correspondent",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get master/banks/{bank_id}/branches",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    var body = JSON.parse(responseBody);\r",
+									"   \r",
+									"    console.log();\r",
+									"\r",
+									"\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "careem",
+								"disabled": true
+							},
+							{
+								"key": "channel",
+								"value": "Direct",
+								"disabled": true
+							},
+							{
+								"key": "company",
+								"value": "784800",
+								"disabled": true
+							},
+							{
+								"key": "branch",
+								"value": "784803",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/master/banks/11232/branches?receiving_country_code=PK&receiving_mode=CASHPICKUP",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"master",
+								"banks",
+								"11232",
+								"branches"
+							],
+							"query": [
+								{
+									"key": "receiving_country_code",
+									"value": "PK"
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "size",
+									"value": "10",
+									"disabled": true
+								},
+								{
+									"key": "correspondent",
+									"value": "RR",
+									"disabled": true
+								},
+								{
+									"key": "receiving_mode",
+									"value": "CASHPICKUP"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get master/banks/{bank_id}/branches/{branch_id}}",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    var body = JSON.parse(responseBody);\r",
+									"   \r",
+									"    console.log();\r",
+									"\r",
+									"\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "careem",
+								"disabled": true
+							},
+							{
+								"key": "channel",
+								"value": "Direct",
+								"disabled": true
+							},
+							{
+								"key": "company",
+								"value": "784800",
+								"disabled": true
+							},
+							{
+								"key": "branch",
+								"value": "784803",
+								"disabled": true
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/master/banks/105854511/branches/127968311?correspondent=RR",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"master",
+								"banks",
+								"105854511",
+								"branches",
+								"127968311"
+							],
+							"query": [
+								{
+									"key": "correspondent",
+									"value": "RR"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "IN - INR",
+			"item": [
+				{
+					"name": "Create Quote",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    var body = JSON.parse(responseBody);\r",
+									"    var content = body[\"data\"];\r",
+									"\r",
+									"    pm.environment.set(\"quote_id\", content.quote_id);\r",
+									"\r",
+									"    console.log();\r",
+									"\r",
+									"\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "testpaasagentae"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784835"
+							},
+							{
+								"key": "branch",
+								"value": "784836"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"sending_country_code\": \"AE\",\n    \"sending_currency_code\": \"AED\",\n    \"receiving_country_code\": \"IN\",\n    \"receiving_currency_code\": \"INR\",\n    \"sending_amount\": 100,\n    \"receiving_mode\": \"BANK\",\n    \"type\": \"SEND\",\n    \"instrument\": \"REMITTANCE\"\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/quote",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"quote"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    var body = JSON.parse(responseBody);\r",
+									"    var content = body[\"data\"];\r",
+									"\r",
+									"    pm.environment.set(\"transaction_ref_number\", content.transaction_ref_number);\r",
+									"\r",
+									"    console.log();\r",
+									"\r",
+									"\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "testpaasagentae"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784835"
+							},
+							{
+								"key": "branch",
+								"value": "784836"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"SEND\",\n    \"source_of_income\": \"SLRY\",\n    \"purpose_of_txn\": \"SAVG\",\n    \"instrument\": \"REMITTANCE\",\n    \"message\": \"Agency transaction\",\n    \"sender\": {\n        \"agent_customer_number\": \"987612349876\",\n        \"mobile_number\": \"+971508359468\",\n        \"first_name\": \"George\",\n        \"last_name\": \"Micheal\",\n        \"sender_id\": [\n            {\n                \"id_code\": \"4\",\n                \"id\": \"784199191427626\",\n                \"issued_on\": \"2022-10-31\",\n                \"valid_through\": \"2025-11-01\"\n            }\n        ],\n        \"date_of_birth\": \"1995-08-22\",\n        \"country_of_birth\": \"IN\",\n        \"nationality\": \"IN\",\n        \"sender_address\": [\n            {\n                \"address_type\": \"PRESENT\",\n                \"address_line\": \"TCRTESTESTETSTETSTDTST, 221b\",\n                \"post_code\": \"710\",\n                \"town_name\": \"DUBAI\",\n                \"country_code\": \"AE\"\n            }\n        ]\n    },\n    \"receiver\": {\n        \"mobile_number\": \"+919586741500\",\n        \"first_name\": \"Anija FirstName\",\n        \"last_name\": \"Anija Lastname\",\n        \"date_of_birth\": \"1990-08-22\",\n        \"gender\": \"F\",\n        \"receiver_address\": [\n            {\n                \"address_type\": \"PRESENT\",\n                \"address_line\": \"TCR\",\n                \"town_name\": \"THRISSUR\",\n                \"country_code\": \"IN\"\n            }\n        ],\n        \"nationality\": \"IN\",\n        \"relation_code\": \"32\",\n        \"bank_details\": {\n            \"account_type_code\": \"1\",\n            \"routing_code\": \"FDRL0001033\",\n            \"account_number\": \"99345724439934\"\n        }\n    },\n    \"transaction\": {\n        \"quote_id\": \"{{quote_id}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/createtransaction",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"createtransaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm Transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "testpaasagentae"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784835"
+							},
+							{
+								"key": "branch",
+								"value": "784836"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"transaction_ref_number\": \"{{transaction_ref_number}}\"\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/confirmtransaction",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"confirmtransaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Enquire Transaction",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "testpaasagentae"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784835"
+							},
+							{
+								"key": "branch",
+								"value": "784836"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/enquire-transaction?transaction_ref_number={{transaction_ref_number}}",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"enquire-transaction"
+							],
+							"query": [
+								{
+									"key": "transaction_ref_number",
+									"value": "{{transaction_ref_number}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    var body = JSON.parse(responseBody);\r",
+									"   \r",
+									"    console.log();\r",
+									"\r",
+									"\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "testpaasagentae"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784835"
+							},
+							{
+								"key": "branch",
+								"value": "784836"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"transaction_ref_number\": \"{{transaction_ref_number}}\",\n    \"cancel_reason\": \"R6\",\n    \"remarks\": \"Account of the payment is incorrect\"\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/canceltransaction",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"canceltransaction"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PK - PKR",
+			"item": [
+				{
+					"name": "Create Quote",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    var body = JSON.parse(responseBody);\r",
+									"    var content = body[\"data\"];\r",
+									"\r",
+									"    pm.environment.set(\"quote_id\", content.quote_id);\r",
+									"\r",
+									"    console.log();\r",
+									"\r",
+									"\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "testpaasagentae"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784835"
+							},
+							{
+								"key": "branch",
+								"value": "784836"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"sending_country_code\": \"AE\",\n    \"sending_currency_code\": \"AED\",\n    \"receiving_country_code\": \"PK\",\n    \"receiving_currency_code\": \"PKR\",\n    \"sending_amount\": 100,\n    \"receiving_mode\": \"BANK\",\n    \"type\": \"SEND\",\n    \"instrument\": \"REMITTANCE\"\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/quote",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"quote"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    var body = JSON.parse(responseBody);\r",
+									"    var content = body[\"data\"];\r",
+									"\r",
+									"    pm.environment.set(\"transaction_ref_number\", content.transaction_ref_number);\r",
+									"\r",
+									"    console.log();\r",
+									"\r",
+									"\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "testpaasagentae"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784835"
+							},
+							{
+								"key": "branch",
+								"value": "784836"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"SEND\",\n    \"source_of_income\": \"SLRY\",\n    \"purpose_of_txn\": \"SAVG\",\n    \"instrument\": \"REMITTANCE\",\n    \"message\": \"Agency transaction\",\n    \"sender\": {\n        \"agent_customer_number\": \"123456785fg41vdd\",\n        \"mobile_number\": \"+971503248026\",\n        \"first_name\": \"Paranthaman\",\n        \"last_name\": \"Ramakrishnan\",\n        \"sender_id\": [\n            {\n                \"id_code\": \"4\",\n                \"id\": \"784199554586091\",\n                \"issued_on\": \"2010-12-10\",\n                \"valid_through\": \"2030-12-10\"\n            }\n        ],\n        \"date_of_birth\": \"1990-08-22\",\n        \"country_of_birth\": \"PK\",\n        \"nationality\": \"PK\",\n        \"sender_address\": [\n            {\n                \"address_type\": \"PRESENT\",\n                \"address_line\": \"TCRTESTESTETSTETSTDTST, 221b\",\n                \"post_code\": \"9054\",\n                \"town_name\": \"THRISSUR\",\n                \"country_code\": \"AE\"\n            }\n        ]\n    },\n    \"receiver\": {\n        \"mobile_number\": \"+919586741508\",\n        \"first_name\": \"Anija FirstName\",\n        \"last_name\": \"Anija Lastname\",\n        \"date_of_birth\": \"1990-08-22\",\n        \"gender\": \"F\",\n        \"receiver_address\": [\n            {\n                \"address_type\": \"PRESENT\",\n                \"address_line\": \"TCR\",\n                \"town_name\": \"THRISSUR\",\n                \"country_code\": \"BD\"\n            }\n        ],\n        \"nationality\": \"PK\",\n        \"relation_code\": \"32\",\n        \"bank_details\": {\n            \"account_type_code\": \"1\",\n            \"iso_code\": \"ALFHPKKAXXX\",\n            \"iban\": \"PK12ABCD1234567891234567\"\n        }\n    },\n    \"transaction\": {\n        \"quote_id\": \"{{quote_id}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/createtransaction",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"createtransaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm Transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "testpaasagentae"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784835"
+							},
+							{
+								"key": "branch",
+								"value": "784836"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"transaction_ref_number\": \"{{transaction_ref_number}}\"\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/confirmtransaction",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"confirmtransaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Enquire Transaction",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "testpaasagentae"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784835"
+							},
+							{
+								"key": "branch",
+								"value": "784836"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/enquire-transaction?transaction_ref_number={{transaction_ref_number}}",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"enquire-transaction"
+							],
+							"query": [
+								{
+									"key": "transaction_ref_number",
+									"value": "{{transaction_ref_number}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    var body = JSON.parse(responseBody);\r",
+									"   \r",
+									"    console.log();\r",
+									"\r",
+									"\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "testpaasagentae"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784835"
+							},
+							{
+								"key": "branch",
+								"value": "784836"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"transaction_ref_number\": \"{{transaction_ref_number}}\",\n    \"cancel_reason\": \"R6\",\n    \"remarks\": \"Account of the payment is incorrect\"\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/canceltransaction",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"canceltransaction"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "BD - BDT",
+			"item": [
+				{
+					"name": "Create Quote",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    var body = JSON.parse(responseBody);\r",
+									"    var content = body[\"data\"];\r",
+									"\r",
+									"    pm.environment.set(\"quote_id\", content.quote_id);\r",
+									"\r",
+									"    console.log();\r",
+									"\r",
+									"\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "testpaasagentae"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784835"
+							},
+							{
+								"key": "branch",
+								"value": "784836"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"sending_country_code\": \"AE\",\n    \"sending_currency_code\": \"AED\",\n    \"receiving_country_code\": \"BD\",\n    \"receiving_currency_code\": \"BDT\",\n    \"sending_amount\": 100,\n    \"receiving_mode\": \"BANK\",\n    \"type\": \"SEND\",\n    \"instrument\": \"REMITTANCE\"\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/quote",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"quote"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    var body = JSON.parse(responseBody);\r",
+									"    var content = body[\"data\"];\r",
+									"\r",
+									"    pm.environment.set(\"transaction_ref_number\", content.transaction_ref_number);\r",
+									"\r",
+									"    console.log();\r",
+									"\r",
+									"\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "testpaasagentae"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784835"
+							},
+							{
+								"key": "branch",
+								"value": "784836"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"SEND\",\n    \"source_of_income\": \"SLRY\",\n    \"purpose_of_txn\": \"SAVG\",\n    \"instrument\": \"REMITTANCE\",\n    \"message\": \"Agency transaction\",\n    \"sender\": {\n        \"agent_customer_number\": \"123456\",\n        \"mobile_number\": \"+971503248026\",\n        \"first_name\": \"Paranthaman\",\n        \"last_name\": \"Ramakrishnan\",\n        \"sender_id\": [\n            {\n                \"id_code\": \"15\",\n                \"id\": \"28735653440\",\n                \"issued_on\": \"2010-12-10\",\n                \"valid_through\": \"2030-12-10\"\n            }\n        ],\n        \"date_of_birth\": \"1990-08-22\",\n        \"country_of_birth\": \"IN\",\n        \"nationality\": \"IN\",\n        \"sender_address\": [\n            {\n                \"address_type\": \"PRESENT\",\n                \"address_line\": \"TCRTESTESTETSTETSTDTST, 221b\",\n                \"post_code\": \"9054\",\n                \"town_name\": \"THRISSUR\",\n                \"country_code\": \"SA\"\n            }\n        ]\n    },\n    \"receiver\": {\n        \"mobile_number\": \"+919586741508\",\n        \"first_name\": \"Anija FirstName\",\n        \"last_name\": \"Anija Lastname\",\n        \"date_of_birth\": \"1990-08-22\",\n        \"gender\": \"F\",\n        \"receiver_address\": [\n            {\n                \"address_type\": \"PRESENT\",\n                \"address_line\": \"TCR\",\n                \"town_name\": \"THRISSUR\",\n                \"country_code\": \"BD\"\n            }\n        ],\n        \"nationality\": \"BD\",\n        \"relation_code\": \"32\",\n        \"bank_details\": {\n            \"account_type_code\": \"1\",\n            \"iso_code\": \"ABBLBDDH201\",\n            \"account_number\": \"9934572443993487\"\n        }\n    },\n    \"transaction\": {\n        \"quote_id\": \"{{quote_id}}\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/createtransaction",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"createtransaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Confirm Transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "testpaasagentae"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784835"
+							},
+							{
+								"key": "branch",
+								"value": "784836"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"transaction_ref_number\": \"{{transaction_ref_number}}\"\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/confirmtransaction",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"confirmtransaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Enquire Transaction",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "testpaasagentae"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784835"
+							},
+							{
+								"key": "branch",
+								"value": "784836"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/enquire-transaction?transaction_ref_number={{transaction_ref_number}}",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"enquire-transaction"
+							],
+							"query": [
+								{
+									"key": "transaction_ref_number",
+									"value": "{{transaction_ref_number}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Transaction",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    var body = JSON.parse(responseBody);\r",
+									"   \r",
+									"    console.log();\r",
+									"\r",
+									"\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "sender",
+								"value": "careem"
+							},
+							{
+								"key": "channel",
+								"value": "Direct"
+							},
+							{
+								"key": "company",
+								"value": "784100"
+							},
+							{
+								"key": "branch",
+								"value": "784801"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"transaction_ref_number\": \"{{transaction_ref_number}}\",\n    \"cancel_reason\": \"R6\",\n    \"remarks\": \"Account of the payment is incorrect\"\n}"
+						},
+						"url": {
+							"raw": "{{Host}}/amr/paas/api/v1_0/paas/canceltransaction",
+							"host": [
+								"{{Host}}"
+							],
+							"path": [
+								"amr",
+								"paas",
+								"api",
+								"v1_0",
+								"paas",
+								"canceltransaction"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

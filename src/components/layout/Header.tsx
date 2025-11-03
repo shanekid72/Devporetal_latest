@@ -1,13 +1,17 @@
-import { Moon, Sun, Menu, Search, X, ArrowLeft } from 'lucide-react';
+import { Moon, Sun, Menu, Search, X, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Menu as HeadlessMenu, Transition } from '@headlessui/react';
+import { Fragment } from 'react';
 import { Theme } from '../../types';
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import clsx from 'clsx';
 
 interface HeaderProps {
   theme: Theme;
   onThemeToggle: () => void;
   onMenuClick: () => void;
+  showHamburger?: boolean;
 }
 
 // const countries: Country[] = [
@@ -16,23 +20,34 @@ interface HeaderProps {
 //   { code: 'USA', name: 'United States', flag: '🇺🇸', apiVersion: 'v1.0-USA' },
 // ];
 
-const Header = ({ theme, onThemeToggle, onMenuClick }: HeaderProps) => {
+const Header = ({ theme, onThemeToggle, onMenuClick, showHamburger = true }: HeaderProps) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   
   const searchInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  
-  const handleBack = () => {
-    // Use browser history to go back to previous page
-    // If no history exists, go to portal overview as fallback
-    if (window.history.length > 1) {
-      navigate(-1);
-    } else {
-      navigate('/portal-overview');
-    }
+  const location = useLocation();
+
+  const isActive = (path: string) => {
+    return location.pathname.startsWith(path);
   };
+
+  const integrationItems = [
+    { label: 'White-labelled', path: '/integration/white-labelled' },
+    { label: 'LFI', path: '/integration/lfi' },
+  ];
+
+  const useCaseItems = [
+    { label: 'WPS', path: '/use-case/wps' },
+    { label: 'Bill Payments', path: '/use-case/bill-payments' },
+  ];
+
+  const directLinks = [
+    { label: 'Support', path: '/support' },
+    { label: 'Documentation', path: '/documentation' },
+    { label: 'Digit9.com', path: '/digit9' },
+  ];
   
   // const selectedCountryData = countries.find(c => c.code === selectedCountry) || countries[0];
   
@@ -92,41 +107,195 @@ const Header = ({ theme, onThemeToggle, onMenuClick }: HeaderProps) => {
   };
 
   return (
-    <header className="sticky top-0 z-30 w-full bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 px-6 py-4 glass-surface backdrop-blur-sm shadow-modern">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          {/* Mobile menu button */}
-          <motion.button
-            onClick={onMenuClick}
-            className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 interactive-glow"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Menu className="h-6 w-6" />
-          </motion.button>
-
-          {/* Back button */}
-          <motion.button
-            onClick={handleBack}
-            className="professional-btn-secondary inline-flex items-center gap-2 px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 transition-all duration-200"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            aria-label="Go back"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            <span className="hidden sm:inline">Back</span>
-          </motion.button>
+    <header className="sticky top-0 z-30 w-full bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 px-6 py-3 glass-surface backdrop-blur-sm shadow-modern">
+      <div className="flex items-center justify-between gap-4">
+        {/* Left side: Hamburger, Logo, Home */}
+        <div className="flex items-center space-x-3">
+          {/* Mobile menu button - only show if showHamburger is true */}
+          {showHamburger && (
+            <motion.button
+              onClick={onMenuClick}
+              className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 interactive-glow"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Menu className="h-6 w-6" />
+            </motion.button>
+          )}
 
           {/* Logo */}
           <div className="flex items-center">
             <img 
               src="/d9wplogo.png" 
               alt="D9 Logo" 
-              className="h-20 w-auto"
+              className="h-16 w-auto"
             />
           </div>
         </div>
 
+        {/* Middle: Navigation items - show on all pages except home */}
+        {location.pathname !== '/' && (
+          <div className="hidden lg:flex items-center space-x-1 flex-1 justify-center max-w-3xl">
+            {/* Integration Model Dropdown */}
+            <HeadlessMenu as="div" className="relative">
+              {({ open }) => (
+                <>
+                  <HeadlessMenu.Button
+                    className={clsx(
+                      'inline-flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md transition-all duration-200',
+                      isActive('/integration')
+                        ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800',
+                      'interactive-glow'
+                    )}
+                  >
+                    <span>Integration Model</span>
+                    <motion.div
+                      animate={{ rotate: open ? 180 : 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                    </motion.div>
+                  </HeadlessMenu.Button>
+
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <HeadlessMenu.Items className="absolute left-0 mt-2 w-48 origin-top-left rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                      <div className="py-1">
+                        {integrationItems.map((item) => (
+                          <HeadlessMenu.Item key={item.path}>
+                            {({ active }) => (
+                              <button
+                                onClick={() => navigate(item.path)}
+                                className={clsx(
+                                  'block w-full text-left px-4 py-2 text-sm transition-colors',
+                                  active
+                                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
+                                    : 'text-gray-700 dark:text-gray-300'
+                                )}
+                              >
+                                {item.label}
+                              </button>
+                            )}
+                          </HeadlessMenu.Item>
+                        ))}
+                      </div>
+                    </HeadlessMenu.Items>
+                  </Transition>
+                </>
+              )}
+            </HeadlessMenu>
+
+            {/* Use Case Dropdown */}
+            <HeadlessMenu as="div" className="relative">
+              {({ open }) => (
+                <>
+                  <HeadlessMenu.Button
+                    className={clsx(
+                      'inline-flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md transition-all duration-200',
+                      isActive('/use-case')
+                        ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800',
+                      'interactive-glow'
+                    )}
+                  >
+                    <span>Use Case</span>
+                    <motion.div
+                      animate={{ rotate: open ? 180 : 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <ChevronDown className="h-4 w-4" />
+                    </motion.div>
+                  </HeadlessMenu.Button>
+
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <HeadlessMenu.Items className="absolute left-0 mt-2 w-48 origin-top-left rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                      <div className="py-1">
+                        {useCaseItems.map((item) => (
+                          <HeadlessMenu.Item key={item.path}>
+                            {({ active }) => (
+                              <button
+                                onClick={() => navigate(item.path)}
+                                className={clsx(
+                                  'block w-full text-left px-4 py-2 text-sm transition-colors',
+                                  active
+                                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
+                                    : 'text-gray-700 dark:text-gray-300'
+                                )}
+                              >
+                                {item.label}
+                              </button>
+                            )}
+                          </HeadlessMenu.Item>
+                        ))}
+                      </div>
+                    </HeadlessMenu.Items>
+                  </Transition>
+                </>
+              )}
+            </HeadlessMenu>
+
+            {/* Direct Links */}
+            {directLinks.map((link) => {
+              // Special handling for Digit9.com - external link
+              if (link.label === 'Digit9.com') {
+                return (
+                  <motion.a
+                    key={link.path}
+                    href="https://www.digitnine.com/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={clsx(
+                      'px-3 py-2 text-sm font-medium rounded-md transition-all duration-200',
+                      'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800',
+                      'interactive-glow'
+                    )}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    {link.label}
+                  </motion.a>
+                );
+              }
+              
+              // Regular internal links
+              return (
+                <motion.button
+                  key={link.path}
+                  onClick={() => navigate(link.path)}
+                  className={clsx(
+                    'px-3 py-2 text-sm font-medium rounded-md transition-all duration-200',
+                    isActive(link.path)
+                      ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800',
+                    'interactive-glow'
+                  )}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {link.label}
+                </motion.button>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Right side: Search and Theme */}
         <div className="flex items-center space-x-2">
           {/* Search button - Enhanced */}
           <motion.button

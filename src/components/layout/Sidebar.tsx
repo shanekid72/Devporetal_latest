@@ -1,16 +1,15 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   ChevronRight, 
   BookOpen, 
-  Key, 
+  Key,
   Code, 
   Shield, 
   UserCircle,
   DollarSign,
   X,
-  Search,
   RefreshCw,
   FileText,
   CheckCircle,
@@ -19,7 +18,8 @@ import {
   GitBranch,
   Settings,
   Target,
-  Home
+  Home,
+  Users
 } from 'lucide-react';
 import { NavigationItem } from '../../types';
 import clsx from 'clsx';
@@ -34,7 +34,6 @@ const navigationItems: NavigationItem[] = [
     title: 'Getting Started',
     icon: 'BookOpen',
     children: [
-      { id: 'portal-overview', title: 'Portal Overview', href: '/portal-overview' },
       { id: 'api-introduction', title: 'API Introduction', href: '/introduction' },
       { id: 'authentication', title: 'Authentication', href: '/authentication' },
     ],
@@ -46,8 +45,23 @@ const navigationItems: NavigationItem[] = [
     children: [
       { id: 'auth-endpoints', title: 'Authentication', href: '/api-reference/auth' },
       { id: 'masters', title: 'Masters', href: '/api-reference/masters' },
-      { id: 'remittance', title: 'Remittance', href: '/api-reference/remittance' },
-      { id: 'customer', title: 'Customer', href: '/api-reference/customer' },
+      { 
+        id: 'customer-onboarding', 
+        title: 'Customer Onboarding', 
+        children: [
+          { id: 'customer-individual', title: 'Individual', href: '/api-reference/customer' },
+          { id: 'customer-business', title: 'Business', href: '/api-reference/customer/business' },
+        ],
+      },
+      { id: 'beneficiary', title: 'Beneficiary Onboarding', href: '/api-reference/beneficiary' },
+      { 
+        id: 'remittance', 
+        title: 'Remittance', 
+        children: [
+          { id: 'remittance-individual', title: 'Individual', href: '/api-reference/remittance' },
+          { id: 'remittance-business', title: 'Business', href: '/api-reference/remittance/business' },
+        ],
+      },
     ],
   },
   {
@@ -111,7 +125,8 @@ const iconMap = {
   Zap,
   GitBranch,
   Settings,
-  Target
+  Target,
+  Users
 };
 
 // Helper function to get all expandable item IDs
@@ -129,13 +144,59 @@ const getAllExpandableIds = (items: NavigationItem[]): string[] => {
   return expandableIds;
 };
 
+// Helper function to filter navigation based on portal type
+const getFilteredNavigation = (portalType: 'whitelabelled' | 'lfi'): NavigationItem[] => {
+  if (portalType === 'whitelabelled') {
+    return navigationItems;
+  }
+  
+  // For LFI: Remove "Customer Onboarding" and "Beneficiary Onboarding" from Core Resources
+  return navigationItems.map(item => {
+    if (item.id === 'core-resources' && item.children) {
+      return {
+        ...item,
+        children: item.children.filter(child => 
+          child.id !== 'customer-onboarding' && 
+          child.id !== 'beneficiary'
+        )
+      };
+    }
+    return item;
+  });
+};
+
 const Sidebar = ({ onClose }: SidebarProps) => {
   const location = useLocation();
-  // Expand all sections by default for complete overview
-  const [expandedItems, setExpandedItems] = useState<string[]>(getAllExpandableIds(navigationItems));
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<NavigationItem[]>([]);
-  const searchRef = useRef<HTMLInputElement>(null);
+  // Portal type selection state (accordion behavior)
+  const [selectedPortalType, setSelectedPortalType] = useState<'whitelabelled' | 'lfi'>(() => {
+    const saved = localStorage.getItem('selected_portal_type');
+    return (saved === 'whitelabelled' || saved === 'lfi') ? saved : 'whitelabelled';
+  });
+  // All sections collapsed by default on first load
+  const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  
+  // Listen for portal type changes
+  useEffect(() => {
+    const handlePortalTypeChange = () => {
+      const saved = localStorage.getItem('selected_portal_type');
+      const newType = (saved === 'whitelabelled' || saved === 'lfi') ? saved : 'whitelabelled';
+      setSelectedPortalType(newType);
+    };
+
+    // Listen for custom event
+    window.addEventListener('portalTypeChanged', handlePortalTypeChange);
+    
+    // Also listen for storage events (cross-tab changes)
+    window.addEventListener('storage', handlePortalTypeChange);
+
+    return () => {
+      window.removeEventListener('portalTypeChanged', handlePortalTypeChange);
+      window.removeEventListener('storage', handlePortalTypeChange);
+    };
+  }, []);
+  
+  // Get filtered navigation based on selected portal type
+  const currentNavigation = getFilteredNavigation(selectedPortalType);
 
   const toggleExpanded = (itemId: string) => {
     setExpandedItems(prev =>
@@ -146,7 +207,7 @@ const Sidebar = ({ onClose }: SidebarProps) => {
   };
 
   const toggleAllExpanded = () => {
-    const allIds = getAllExpandableIds(navigationItems);
+    const allIds = getAllExpandableIds(currentNavigation);
     const isAllExpanded = allIds.every(id => expandedItems.includes(id));
     
     if (isAllExpanded) {
@@ -158,6 +219,7 @@ const Sidebar = ({ onClose }: SidebarProps) => {
     }
   };
 
+
   const isActive = (href: string) => {
     return location.pathname === href || location.pathname.startsWith(`${href}/`);
   };
@@ -166,40 +228,6 @@ const Sidebar = ({ onClose }: SidebarProps) => {
     return children.some(child => child.href && isActive(child.href));
   };
 
-  useEffect(() => {
-    // Auto-expand parent of active item
-    navigationItems.forEach(item => {
-      if (item.children && isParentActive(item.children) && !expandedItems.includes(item.id)) {
-        setExpandedItems(prev => [...prev, item.id]);
-      }
-    });
-  }, [location.pathname]);
-
-  useEffect(() => {
-    if (searchQuery.trim() === '') {
-      setSearchResults([]);
-      return;
-    }
-
-    const query = searchQuery.toLowerCase();
-    const results = navigationItems.flatMap(category => {
-      if (!category.children) return [];
-      
-      return category.children.filter(item => 
-        item.title.toLowerCase().includes(query) || 
-        (item.id && item.id.toLowerCase().includes(query))
-      );
-    });
-
-    setSearchResults(results);
-  }, [searchQuery]);
-
-  const handleClearSearch = () => {
-    setSearchQuery('');
-    if (searchRef.current) {
-      searchRef.current.focus();
-    }
-  };
 
   const renderNavigationItem = (item: NavigationItem, level = 0) => {
     const Icon = iconMap[item.icon as keyof typeof iconMap] || BookOpen;
@@ -220,13 +248,15 @@ const Sidebar = ({ onClose }: SidebarProps) => {
             whileTap={{ scale: 0.98 }}
           >
             <div className="flex items-center space-x-3">
-              <motion.div
-                whileHover={{ rotate: 10, scale: 1.1 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Icon className="h-5 w-5" />
-              </motion.div>
-              <span>{item.title}</span>
+              {item.icon && (
+                <motion.div
+                  whileHover={{ rotate: 10, scale: 1.1 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Icon className="h-5 w-5" />
+                </motion.div>
+              )}
+              <span className="whitespace-nowrap">{item.title}</span>
             </div>
             <motion.div
               animate={{ rotate: isExpanded ? 90 : 0 }}
@@ -279,7 +309,7 @@ const Sidebar = ({ onClose }: SidebarProps) => {
                 <Icon className="h-5 w-5" />
               </motion.div>
             )}
-            <span>{item.title}</span>
+            <span className="whitespace-nowrap">{item.title}</span>
           </div>
         </Link>
       </motion.div>
@@ -338,7 +368,7 @@ const Sidebar = ({ onClose }: SidebarProps) => {
         >
           <RefreshCw className="h-3 w-3" />
           <span>
-            {getAllExpandableIds(navigationItems).every(id => expandedItems.includes(id)) 
+            {getAllExpandableIds(currentNavigation).every(id => expandedItems.includes(id)) 
               ? 'Collapse All' 
               : 'Expand All'
             }
@@ -346,96 +376,42 @@ const Sidebar = ({ onClose }: SidebarProps) => {
         </motion.button>
       </motion.div>
 
-      {/* Search - Modern Enhanced */}
+      {/* Model Indicator Badge - replaces search */}
       <motion.div 
-        className="p-4 border-b border-gray-200 dark:border-gray-800 glass-surface"
+        className="px-4 py-3 border-b border-gray-200 dark:border-gray-800 glass-surface"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.1 }}
       >
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 text-gray-400" />
-          </div>
-          <motion.input
-            ref={searchRef}
-            type="text"
-            placeholder="Find anything..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-10 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 font-body transition-all duration-200 shadow-modern"
-            whileFocus={{ scale: 1.02 }}
-          />
-          {searchQuery && (
-            <motion.button
-              onClick={handleClearSearch}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-500 interactive-glow"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-            >
-              <X className="h-4 w-4" />
-            </motion.button>
-          )}
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-700">
+          <span className="text-xs font-semibold text-blue-700 dark:text-blue-300">
+            {selectedPortalType === 'lfi' ? '📍 LFI' : '📍 White-labelled'}
+          </span>
         </div>
-
-        {/* Search Results - Modern Enhanced */}
-        <AnimatePresence>
-          {searchResults.length > 0 && (
-            <motion.div 
-              className="mt-2 max-h-64 overflow-auto rounded-lg border border-gray-200 dark:border-gray-700 glass-card shadow-modern"
-              initial={{ opacity: 0, y: -10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.95 }}
-              transition={{ duration: 0.2 }}
-            >
-              <ul className="py-1">
-                {searchResults.map((result, index) => (
-                  <motion.li 
-                    key={`${result.id}-${index}`}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.2, delay: index * 0.05 }}
-                  >
-                    <motion.div whileHover={{ x: 4 }}>
-                      <Link
-                        to={result.href || '#'}
-                        onClick={onClose}
-                        className="block px-3 py-2 text-sm hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 transition-all duration-200 font-body interactive-glow rounded-md mx-1"
-                      >
-                        {result.title}
-                      </Link>
-                    </motion.div>
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </motion.div>
 
-      {/* Navigation - Modern Enhanced */}
-      <motion.nav 
-        className="flex-1 overflow-y-auto px-4 py-6"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.2 }}
-      >
-        <div className="space-y-6">
-          {navigationItems.map((item, index) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: 0.3 + (index * 0.1) }}
-            >
-              {renderNavigationItem(item)}
-            </motion.div>
-          ))}
-        </div>
-      </motion.nav>
+      {/* Navigation Items */}
+      <div className="flex-1 overflow-y-auto">
+        <motion.nav 
+          className="px-4 py-6"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
+          <div className="space-y-6">
+            {currentNavigation.map((item, index) => (
+              <motion.div
+                key={item.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+              >
+                {renderNavigationItem(item)}
+              </motion.div>
+            ))}
+          </div>
+        </motion.nav>
+      </div>
 
       {/* Footer - Modern Enhanced */}
       <motion.div 

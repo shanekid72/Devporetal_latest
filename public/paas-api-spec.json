@@ -1,0 +1,1290 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Digit9 (Payment as a Service) API",
+    "description": "API documentation for the Payment as a Service platform",
+    "version": "1.0.0",
+    "contact": {
+      "name": "API Support"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3001/api",
+      "description": "Sandbox Environment"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "Authentication endpoints"
+    },
+    {
+      "name": "Codes and Master",
+      "description": "Reference data endpoints"
+    },
+    {
+      "name": "Transactions",
+      "description": "Transaction management endpoints"
+    }
+  ],
+  "paths": {
+    "/auth/realms/cdp/protocol/openid-connect/token": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Get access token",
+        "description": "Authenticate and get an access token for API access",
+        "operationId": "getAccessToken",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "example": "testpaasagentae"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "TestPaaSAgentAE098"
+                  },
+                  "grant_type": {
+                    "type": "string",
+                    "example": "password"
+                  },
+                  "client_id": {
+                    "type": "string",
+                    "example": "cdp_app"
+                  },
+                  "client_secret": {
+                    "type": "string",
+                    "example": "mSh18BPiMZeQqFfOvWhgv8wzvnNVbj3Y"
+                  }
+                },
+                "required": ["username", "password", "grant_type", "client_id", "client_secret"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful authentication",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "access_token": {
+                      "type": "string"
+                    },
+                    "expires_in": {
+                      "type": "integer"
+                    },
+                    "refresh_expires_in": {
+                      "type": "integer"
+                    },
+                    "refresh_token": {
+                      "type": "string"
+                    },
+                    "token_type": {
+                      "type": "string"
+                    },
+                    "scope": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/amr/paas/api/v1_0/paas/codes": {
+      "get": {
+        "tags": ["Codes and Master"],
+        "summary": "Get Codes",
+        "description": "Retrieve reference codes for the system",
+        "operationId": "getCodes",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "sender",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "testpaasagentae"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Direct"
+            }
+          },
+          {
+            "name": "company",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "784835"
+            }
+          },
+          {
+            "name": "branch",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "784836"
+            }
+          },
+          {
+            "name": "code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "id_types"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/amr/paas/api/v1_0/paas/service-corridor": {
+      "get": {
+        "tags": ["Codes and Master"],
+        "summary": "Get Service Corridor",
+        "description": "Retrieve available service corridors for remittance",
+        "operationId": "getServiceCorridor",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "sender",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "testpaasagentae"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Direct"
+            }
+          },
+          {
+            "name": "company",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "784835"
+            }
+          },
+          {
+            "name": "branch",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "784836"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/amr/paas/api/v1_0/paas/rates": {
+      "get": {
+        "tags": ["Codes and Master"],
+        "summary": "Get Rates",
+        "description": "Retrieve current exchange rates",
+        "operationId": "getRates",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "sender",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "testpaasagentae"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Direct"
+            }
+          },
+          {
+            "name": "company",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "784835"
+            }
+          },
+          {
+            "name": "branch",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "784836"
+            }
+          },
+          {
+            "name": "receiving_currency_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "PKR"
+            }
+          },
+          {
+            "name": "receiving_country_code",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "PK"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/amr/paas/api/v1_0/paas/master/banks": {
+      "get": {
+        "tags": ["Codes and Master"],
+        "summary": "Master Banks",
+        "description": "Retrieve list of available banks",
+        "operationId": "getMasterBanks",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer {access_token}"
+            }
+          },
+          {
+            "name": "receiving_country_code",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "PK"
+            }
+          },
+          {
+            "name": "receiving_mode",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "CASHPICKUP"
+            }
+          },
+          {
+            "name": "correspondent",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "RR"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/amr/paas/api/v1_0/paas/master/banks/{bank_id}": {
+      "get": {
+        "tags": ["Codes and Master"],
+        "summary": "Master Banks - ID",
+        "description": "Retrieve bank details by ID",
+        "operationId": "getMasterBankById",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer {access_token}"
+            }
+          },
+          {
+            "name": "bank_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "11232"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/amr/paas/api/v1_0/paas/master/banks/{bank_id}/branches": {
+      "get": {
+        "tags": ["Codes and Master"],
+        "summary": "Get Branches",
+        "description": "Retrieve list of bank branches",
+        "operationId": "getBranches",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer {access_token}"
+            }
+          },
+          {
+            "name": "bank_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "11232"
+            }
+          },
+          {
+            "name": "receiving_country_code",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "PK"
+            }
+          },
+          {
+            "name": "receiving_mode",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "CASHPICKUP"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 10
+            }
+          },
+          {
+            "name": "correspondent",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "RR"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/amr/paas/api/v1_0/paas/master/banks/{bank_id}/branches/{branch_id}": {
+      "get": {
+        "tags": ["Codes and Master"],
+        "summary": "Get Branch by ID",
+        "description": "Retrieve branch details by ID",
+        "operationId": "getBranchById",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Bearer {access_token}"
+            }
+          },
+          {
+            "name": "bank_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "105854511"
+            }
+          },
+          {
+            "name": "branch_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "127968311"
+            }
+          },
+          {
+            "name": "correspondent",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "RR"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/amr/paas/api/v1_0/paas/quote": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Create Quote",
+        "description": "Create a quote for a remittance transaction",
+        "operationId": "createQuote",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "sender",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "testpaasagentae"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Direct"
+            }
+          },
+          {
+            "name": "company",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "784835"
+            }
+          },
+          {
+            "name": "branch",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "784836"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "sending_country_code": {
+                    "type": "string",
+                    "example": "AE"
+                  },
+                  "sending_currency_code": {
+                    "type": "string",
+                    "example": "AED"
+                  },
+                  "receiving_country_code": {
+                    "type": "string",
+                    "example": "PK"
+                  },
+                  "receiving_currency_code": {
+                    "type": "string",
+                    "example": "PKR"
+                  },
+                  "sending_amount": {
+                    "type": "number",
+                    "example": 100
+                  },
+                  "receiving_mode": {
+                    "type": "string",
+                    "example": "BANK"
+                  },
+                  "type": {
+                    "type": "string",
+                    "example": "SEND"
+                  },
+                  "instrument": {
+                    "type": "string",
+                    "example": "REMITTANCE"
+                  }
+                },
+                "required": [
+                  "sending_country_code",
+                  "sending_currency_code",
+                  "receiving_country_code",
+                  "receiving_currency_code",
+                  "sending_amount",
+                  "receiving_mode",
+                  "type",
+                  "instrument"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "quote_id": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/amr/paas/api/v1_0/paas/createtransaction": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Create Transaction",
+        "description": "Create a remittance transaction",
+        "operationId": "createTransaction",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "sender",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "testpaasagentae"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Direct"
+            }
+          },
+          {
+            "name": "company",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "784835"
+            }
+          },
+          {
+            "name": "branch",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "784836"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "example": "SEND"
+                  },
+                  "source_of_income": {
+                    "type": "string",
+                    "example": "SLRY"
+                  },
+                  "purpose_of_txn": {
+                    "type": "string",
+                    "example": "SAVG"
+                  },
+                  "instrument": {
+                    "type": "string",
+                    "example": "REMITTANCE"
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Agency transaction"
+                  },
+                  "sender": {
+                    "type": "object",
+                    "properties": {
+                      "agent_customer_number": {
+                        "type": "string",
+                        "example": "987612349876"
+                      },
+                      "mobile_number": {
+                        "type": "string",
+                        "example": "+971508359468"
+                      },
+                      "first_name": {
+                        "type": "string",
+                        "example": "George"
+                      },
+                      "last_name": {
+                        "type": "string",
+                        "example": "Micheal"
+                      },
+                      "sender_id": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id_code": {
+                              "type": "string",
+                              "example": "4"
+                            },
+                            "id": {
+                              "type": "string",
+                              "example": "784199191427626"
+                            },
+                            "issued_on": {
+                              "type": "string",
+                              "example": "2022-10-31"
+                            },
+                            "valid_through": {
+                              "type": "string",
+                              "example": "2025-11-01"
+                            }
+                          }
+                        }
+                      },
+                      "date_of_birth": {
+                        "type": "string",
+                        "example": "1995-08-22"
+                      },
+                      "country_of_birth": {
+                        "type": "string",
+                        "example": "IN"
+                      },
+                      "nationality": {
+                        "type": "string",
+                        "example": "IN"
+                      },
+                      "sender_address": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "address_type": {
+                              "type": "string",
+                              "example": "PRESENT"
+                            },
+                            "address_line": {
+                              "type": "string",
+                              "example": "TCRTESTESTETSTETSTDTST, 221b"
+                            },
+                            "post_code": {
+                              "type": "string",
+                              "example": "710"
+                            },
+                            "town_name": {
+                              "type": "string",
+                              "example": "DUBAI"
+                            },
+                            "country_code": {
+                              "type": "string",
+                              "example": "AE"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "receiver": {
+                    "type": "object",
+                    "properties": {
+                      "mobile_number": {
+                        "type": "string",
+                        "example": "+919586741500"
+                      },
+                      "first_name": {
+                        "type": "string",
+                        "example": "Anija FirstName"
+                      },
+                      "last_name": {
+                        "type": "string",
+                        "example": "Anija Lastname"
+                      },
+                      "date_of_birth": {
+                        "type": "string",
+                        "example": "1990-08-22"
+                      },
+                      "gender": {
+                        "type": "string",
+                        "example": "F"
+                      },
+                      "receiver_address": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "address_type": {
+                              "type": "string",
+                              "example": "PRESENT"
+                            },
+                            "address_line": {
+                              "type": "string",
+                              "example": "TCR"
+                            },
+                            "town_name": {
+                              "type": "string",
+                              "example": "THRISSUR"
+                            },
+                            "country_code": {
+                              "type": "string",
+                              "example": "IN"
+                            }
+                          }
+                        }
+                      },
+                      "nationality": {
+                        "type": "string",
+                        "example": "IN"
+                      },
+                      "relation_code": {
+                        "type": "string",
+                        "example": "32"
+                      },
+                      "bank_details": {
+                        "type": "object",
+                        "properties": {
+                          "account_type_code": {
+                            "type": "string",
+                            "example": "1"
+                          },
+                          "routing_code": {
+                            "type": "string",
+                            "example": "FDRL0001033"
+                          },
+                          "account_number": {
+                            "type": "string",
+                            "example": "99345724439934"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "transaction": {
+                    "type": "object",
+                    "properties": {
+                      "quote_id": {
+                        "type": "string",
+                        "example": "{{quote_id}}"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "transaction_ref_number": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/amr/paas/api/v1_0/paas/confirmtransaction": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Confirm Transaction",
+        "description": "Confirm a created transaction",
+        "operationId": "confirmTransaction",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "sender",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "testpaasagentae"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Direct"
+            }
+          },
+          {
+            "name": "company",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "784835"
+            }
+          },
+          {
+            "name": "branch",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "784836"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "transaction_ref_number": {
+                    "type": "string",
+                    "example": "{{transaction_ref_number}}"
+                  }
+                },
+                "required": ["transaction_ref_number"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/amr/paas/api/v1_0/paas/enquire-transaction": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "Enquire Transaction",
+        "description": "Get details of a transaction",
+        "operationId": "enquireTransaction",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "transaction_ref_number",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "{{transaction_ref_number}}"
+            }
+          },
+          {
+            "name": "sender",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "testpaasagentae"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Direct"
+            }
+          },
+          {
+            "name": "company",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "784835"
+            }
+          },
+          {
+            "name": "branch",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "784836"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/amr/paas/api/v1_0/paas/canceltransaction": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Cancel Transaction",
+        "description": "Cancel a transaction",
+        "operationId": "cancelTransaction",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "sender",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "testpaasagentae"
+            }
+          },
+          {
+            "name": "channel",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Direct"
+            }
+          },
+          {
+            "name": "company",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "784835"
+            }
+          },
+          {
+            "name": "branch",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "784836"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "transaction_ref_number": {
+                    "type": "string",
+                    "example": "{{transaction_ref_number}}"
+                  },
+                  "cancel_reason": {
+                    "type": "string",
+                    "example": "R6"
+                  },
+                  "remarks": {
+                    "type": "string",
+                    "example": "Account of the payment is incorrect"
+                  }
+                },
+                "required": ["transaction_ref_number", "cancel_reason"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
+

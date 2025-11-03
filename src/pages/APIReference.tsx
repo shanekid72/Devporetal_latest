@@ -13,6 +13,37 @@ const APIReference = ({ theme }: APIReferenceProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error] = useState<string | null>(null);
   
+  // Portal type state
+  const [portalType, setPortalType] = useState<'whitelabelled' | 'lfi'>(() => {
+    const saved = localStorage.getItem('selected_portal_type');
+    return saved === 'lfi' ? 'lfi' : 'whitelabelled';
+  });
+  
+  // Listen for portal type changes
+  useEffect(() => {
+    const handlePortalTypeChange = () => {
+      const saved = localStorage.getItem('selected_portal_type');
+      setPortalType(saved === 'lfi' ? 'lfi' : 'whitelabelled');
+    };
+
+    window.addEventListener('portalTypeChanged', handlePortalTypeChange);
+    window.addEventListener('storage', handlePortalTypeChange);
+
+    return () => {
+      window.removeEventListener('portalTypeChanged', handlePortalTypeChange);
+      window.removeEventListener('storage', handlePortalTypeChange);
+    };
+  }, []);
+
+  // Determine which spec to load
+  const isPaaS = portalType === 'lfi';
+  const specUrl = isPaaS ? '/paas-api-spec.json' : '/raas-api-spec.json';
+  const apiTitle = isPaaS ? 'PaaS (Payment as a Service)' : 'RaaS (Remittance as a Service)';
+  const apiPath = isPaaS ? '/amr/paas/api/v1_0/paas/' : '/amr/ras/api/v1_0/ras/';
+  const credentials = isPaaS 
+    ? { username: 'testpaasagentae', password: 'TestPaaSAgentAE098', company: '784835', branch: '784836' }
+    : { username: 'testagentae', password: 'Admin@123', company: '784825', branch: '784826' };
+  
   useEffect(() => {
     // Simulate loading time for better UX
     const timer = setTimeout(() => {
@@ -20,7 +51,7 @@ const APIReference = ({ theme }: APIReferenceProps) => {
     }, 500);
     
     return () => clearTimeout(timer);
-  }, []);
+  }, [portalType]);
 
   // Fix Swagger UI scrolling after it loads
   useEffect(() => {
@@ -53,10 +84,10 @@ const APIReference = ({ theme }: APIReferenceProps) => {
       <ScrollRevealContainer>
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-            API Reference
+            API Reference - {apiTitle}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-400">
-            Explore and test the Digit9 worldAPI endpoints using our interactive Swagger documentation.
+            Explore and test the Digit9 {apiTitle} endpoints using our interactive Swagger documentation.
           </p>
         </div>
       </ScrollRevealContainer>
@@ -398,7 +429,7 @@ const APIReference = ({ theme }: APIReferenceProps) => {
                 `}
               </style>
               <SwaggerUI 
-                url={`/raas-api-spec.json?v=${Date.now()}`}
+                url={`${specUrl}?v=${Date.now()}`}
                 docExpansion="list"
                 deepLinking={true}
                 filter={true}
@@ -429,7 +460,7 @@ const APIReference = ({ theme }: APIReferenceProps) => {
                     label: 'cURL',
                     code: `curl -X POST "https://drap-sandbox.digitnine.com/auth/realms/cdp/protocol/openid-connect/token" \\
   -H "Content-Type: application/x-www-form-urlencoded" \\
-  -d "username=testagentae&password=Admin@123&grant_type=password&client_id=cdp_app&client_secret=mSh18BPiMZeQqFfOvWhgv8wzvnNVbj3Y"`
+  -d "username=${credentials.username}&password=${credentials.password}&grant_type=password&client_id=cdp_app&client_secret=mSh18BPiMZeQqFfOvWhgv8wzvnNVbj3Y"`
                   }
                 ]}
               />
@@ -448,8 +479,8 @@ const APIReference = ({ theme }: APIReferenceProps) => {
 const qs = require('qs');
 
 const data = qs.stringify({
-  'username': 'testagentae',
-  'password': 'Admin@123',
+  'username': '${credentials.username}',
+  'password': '${credentials.password}',
   'grant_type': 'password',
   'client_id': 'cdp_app',
   'client_secret': 'mSh18BPiMZeQqFfOvWhgv8wzvnNVbj3Y'
@@ -494,7 +525,7 @@ const data = JSON.stringify({
   "sending_currency_code": "AED",
   "receiving_country_code": "PK",
   "receiving_currency_code": "PKR",
-  "sending_amount": 300,
+  "sending_amount": ${isPaaS ? '100' : '300'},
   "receiving_mode": "BANK",
   "type": "SEND",
   "instrument": "REMITTANCE"
@@ -502,13 +533,13 @@ const data = JSON.stringify({
 
 const config = {
   method: 'post',
-  url: 'https://drap-sandbox.digitnine.com/amr/ras/api/v1_0/ras/quote',
+  url: 'https://drap-sandbox.digitnine.com${apiPath}quote',
   headers: { 
     'Content-Type': 'application/json', 
-    'sender': 'testagentae', 
+    'sender': '${credentials.username}', 
     'channel': 'Direct', 
-    'company': '784825', 
-    'branch': '784826', 
+    'company': '${credentials.company}', 
+    'branch': '${credentials.branch}', 
     'Authorization': 'Bearer YOUR_ACCESS_TOKEN'
   },
   data: data

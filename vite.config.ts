@@ -19,10 +19,19 @@ export default defineConfig(({ command, mode }) => {
       open: true,
       proxy: {
         '/api': {
-          target: 'http://localhost:3001',
+          target: 'https://drap-sandbox.digitnine.com',
           changeOrigin: true,
-          secure: false,
+          secure: true,
           ws: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
+          configure: (proxy, options) => {
+            proxy.on('proxyReq', (proxyReq, req, res) => {
+              console.log(`[VITE PROXY] ${req.method} ${req.url} -> ${options.target}${req.url}`);
+            });
+            proxy.on('proxyRes', (proxyRes, req, res) => {
+              console.log(`[VITE PROXY] Response ${proxyRes.statusCode} for ${req.url}`);
+            });
+          }
         }
       }
     },

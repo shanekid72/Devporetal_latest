@@ -25,6 +25,22 @@ const SandboxTestingPage = lazy(() => import('./pages/SandboxTestingPage'));
 const APIReference = lazy(() => import('./pages/APIReference'));
 const PlaceholderPage = lazy(() => import('./pages/PlaceholderPage'));
 
+// Integration pages
+const WhiteLabelledPage = lazy(() => import('./pages/integration/WhiteLabelledPage'));
+const LFIPage = lazy(() => import('./pages/integration/LFIPage'));
+
+// Info pages
+const UseCaseWPSPage = lazy(() => import('./pages/UseCaseWPSPage'));
+const UseCaseBillPaymentsPage = lazy(() => import('./pages/UseCaseBillPaymentsPage'));
+const SupportPage = lazy(() => import('./pages/SupportPage'));
+const DocumentationPage = lazy(() => import('./pages/DocumentationPage'));
+const Digit9Page = lazy(() => import('./pages/Digit9Page'));
+
+// API pages
+const CustomerBusinessPage = lazy(() => import('./pages/CustomerBusinessPage'));
+const BeneficiaryPage = lazy(() => import('./pages/BeneficiaryPage'));
+const RemittanceBusinessPage = lazy(() => import('./pages/RemittanceBusinessPage'));
+
 gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
 function App() {
@@ -102,7 +118,22 @@ function App() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <MainLayout theme={theme} onThemeToggle={toggleTheme} hideNavigation={location.pathname === '/'}>
+      <MainLayout 
+        theme={theme} 
+        onThemeToggle={toggleTheme} 
+        hideNavigation={location.pathname === '/'}
+        showSidebar={
+          location.pathname.startsWith('/integration/') ||
+          location.pathname.startsWith('/introduction') ||
+          location.pathname.startsWith('/authentication') ||
+          location.pathname.startsWith('/api-reference') ||
+          location.pathname.startsWith('/agent-toolkit') ||
+          location.pathname.startsWith('/sandbox-testing') ||
+          location.pathname.startsWith('/guides/') ||
+          location.pathname.startsWith('/downloads') ||
+          location.pathname.startsWith('/changelog')
+        }
+      >
         <Suspense
           fallback={
             <div className="flex items-center justify-center min-h-[60vh]">
@@ -117,12 +148,27 @@ function App() {
             {/* Landing */}
             <Route path="/" element={<SplineRobotHome />} />
 
-            {/* Getting Started */}
+            {/* Portal Overview - no sidebar */}
             <Route path="/portal-overview" element={<PortalOverviewPage />} />
+
+            {/* Integration Model - with sidebar */}
+            <Route path="/integration/white-labelled" element={<WhiteLabelledPage />} />
+            <Route path="/integration/lfi" element={<LFIPage />} />
+
+            {/* Use Case - no sidebar */}
+            <Route path="/use-case/wps" element={<UseCaseWPSPage />} />
+            <Route path="/use-case/bill-payments" element={<UseCaseBillPaymentsPage />} />
+
+            {/* Info pages - no sidebar */}
+            <Route path="/support" element={<SupportPage />} />
+            <Route path="/documentation" element={<DocumentationPage />} />
+            <Route path="/digit9" element={<Digit9Page />} />
+
+            {/* Getting Started - with sidebar */}
             <Route path="/introduction" element={<IntroductionPage />} />
             <Route path="/authentication" element={<AuthenticationPage theme={theme} />} />
 
-            {/* Agent Toolkit */}
+            {/* Agent Toolkit - with sidebar */}
             <Route path="/agent-toolkit" element={<AgentToolkitIntroductionPage theme={theme} />} />
             <Route path="/agent-toolkit/quickstart/payments" element={<PaymentsQuickstartPage theme={theme} />} />
             <Route path="/agent-toolkit/quickstart/mcp" element={<MCPQuickstartPage theme={theme} />} />
@@ -131,15 +177,18 @@ function App() {
             <Route path="/agent-toolkit/best-practices/integration" element={<IntegrationBestPracticesPage theme={theme} />} />
             <Route path="/agent-toolkit/best-practices/prompting" element={<PromptingBestPracticesPage theme={theme} />} />
 
-            {/* API Reference */}
+            {/* API Reference - with sidebar */}
             <Route path="/api-reference" element={<Navigate to="/api-reference/auth" replace />} />
             <Route path="/api-reference/:endpointId" element={<APIReferencePage theme={theme} />} />
             <Route path="/api-reference-swagger" element={<APIReference theme={theme} />} />
+            <Route path="/api-reference/customer/business" element={<CustomerBusinessPage theme={theme} />} />
+            <Route path="/api-reference/beneficiary" element={<BeneficiaryPage theme={theme} />} />
+            <Route path="/api-reference/remittance/business" element={<RemittanceBusinessPage />} />
 
-            {/* Sandbox */}
+            {/* Sandbox - with sidebar */}
             <Route path="/sandbox-testing" element={<SandboxTestingPage />} />
 
-            {/* Resources */}
+            {/* Resources - with sidebar */}
             <Route path="/guides/onboarding" element={<PlaceholderPage />} />
             <Route path="/guides/transactions" element={<PlaceholderPage />} />
             <Route path="/guides/rates" element={<PlaceholderPage />} />

@@ -10,6 +10,7 @@ import clsx from 'clsx';
 import { Theme } from '../types';
 import { validateFilters } from '../utils/filterValidation';
 import { filterCodesByType } from '../utils/clientSideFilter';
+import { paasApiSections } from './paasApiSections';
 
 // Quote management functions
 // let currentQuoteId = localStorage.getItem('raas_quote_id') || '';
@@ -46,12 +47,16 @@ const clearTransactionRefNumber = () => {
 };
 
 // Function to automatically create a quote
-const createQuoteAutomatically = async () => {
+const createQuoteAutomatically = async (portalType: 'whitelabelled' | 'lfi' | null = null) => {
   try {
     console.log('🔄 Automatically creating quote...');
     
+    const savedPortalType = portalType || localStorage.getItem('selected_portal_type');
+    const isPaaS = savedPortalType === 'lfi';
+    
     const baseUrl = 'http://localhost:3001/api';
-    const url = `${baseUrl}/amr/ras/api/v1_0/ras/quote`;
+    const path = isPaaS ? '/amr/paas/api/v1_0/paas/quote' : '/amr/ras/api/v1_0/ras/quote';
+    const url = `${baseUrl}${path}`;
     
     const quoteRequestBody = {
       "sending_country_code": "AE",
@@ -69,16 +74,25 @@ const createQuoteAutomatically = async () => {
       throw new Error('No access token available');
     }
     
+    const headers = isPaaS ? {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+      'sender': 'testpaasagentae',
+      'channel': 'Direct',
+      'company': '784835',
+      'branch': '784836'
+    } : {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+      'sender': 'testagentae',
+      'channel': 'Direct',
+      'company': '784825',
+      'branch': '784826'
+    };
+    
     const response = await fetch(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-        'sender': 'testagentae',
-        'channel': 'Direct',
-        'company': '784825',
-        'branch': '784826'
-      },
+      headers,
       body: JSON.stringify(quoteRequestBody)
     });
     
@@ -6934,6 +6948,31 @@ const APIReferencePage = ({ theme }: APIReferencePageProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   
+  // Get portal type from localStorage
+  const [portalType, setPortalType] = useState<'whitelabelled' | 'lfi' | null>(() => {
+    const saved = localStorage.getItem('selected_portal_type');
+    return (saved === 'whitelabelled' || saved === 'lfi') ? saved : 'whitelabelled';
+  });
+  
+  // Listen for portal type changes (from same tab and other tabs)
+  useEffect(() => {
+    const handlePortalTypeChange = () => {
+      const saved = localStorage.getItem('selected_portal_type');
+      setPortalType((saved === 'whitelabelled' || saved === 'lfi') ? saved : 'whitelabelled');
+      console.log('🔄 Portal type changed to:', saved || 'whitelabelled');
+    };
+    
+    // Listen for custom event (same tab changes)
+    window.addEventListener('portalTypeChanged', handlePortalTypeChange);
+    // Listen for storage event (other tab changes)
+    window.addEventListener('storage', handlePortalTypeChange);
+    
+    return () => {
+      window.removeEventListener('portalTypeChanged', handlePortalTypeChange);
+      window.removeEventListener('storage', handlePortalTypeChange);
+    };
+  }, []);
+  
   // Extract the active category from URL path
   const getActiveCategory = () => {
     const path = location.pathname.split('/');
@@ -6964,11 +7003,13 @@ const APIReferencePage = ({ theme }: APIReferencePageProps) => {
   
   // Filter endpoints based on search and method filter
   useEffect(() => {
-    const currentSection = apiSections[activeTab] || [];
+    // Use PaaS API sections for LFI portal, RaaS API sections for White labelled portal
+    const currentApiSections = portalType === 'lfi' ? paasApiSections : apiSections;
+    const currentSection = currentApiSections[activeTab] || [];
     let endpoints = currentSection.flatMap(section => section.endpoints);
 
-    // Override Customer API with collapsible eKYC sections
-    if (activeTab === 'customer') {
+    // Override Customer API with collapsible eKYC sections (only for White labelled portal)
+    if (activeTab === 'customer' && portalType !== 'lfi') {
       endpoints = customerOnboardingEndpoints;
     }
     
@@ -6990,7 +7031,7 @@ const APIReferencePage = ({ theme }: APIReferencePageProps) => {
     }
     
     setFilteredEndpoints(endpoints);
-  }, [activeTab, searchQuery, selectedMethod]);
+  }, [activeTab, searchQuery, selectedMethod, portalType]);
   
   // Handle tab change
   const handleTabChange = (tabId: string) => {
@@ -7067,7 +7108,7 @@ const APIReferencePage = ({ theme }: APIReferencePageProps) => {
       console.log(`Making API call to: ${url}`);
       
       // ⚠️ FILTER VALIDATION: Check if required filters are provided for master APIs
-      if (endpoint.method === 'GET' && endpoint.path.includes('/raas/masters/')) {
+      if (endpoint.method === 'GET' && (endpoint.path.includes('/raas/masters/') || endpoint.path.includes('/paas/master/'))) {
         const validation = validateFilters(endpoint.path, queryParams || {});
         if (!validation.isValid) {
           console.error('❌ Filter validation failed:', validation.errorMessage);
@@ -7090,7 +7131,7 @@ const APIReferencePage = ({ theme }: APIReferencePageProps) => {
         if (!quoteId) {
           console.log('📝 No quote ID found, creating quote automatically...');
           try {
-            quoteId = await createQuoteAutomatically();
+            quoteId = await createQuoteAutomatically(portalType);
           } catch (error) {
             console.error('❌ Failed to create quote automatically:', error);
             return JSON.stringify({
@@ -7183,7 +7224,7 @@ const APIReferencePage = ({ theme }: APIReferencePageProps) => {
       }
       
       // Prepare request options with extended timeout for Get Codes API
-      const timeout = endpoint.path.includes('/raas/masters/v1/codes') ? 300000 : 120000; // 5 minutes for Get Codes, 2 minutes for others
+      const timeout = (endpoint.path.includes('/raas/masters/v1/codes') || endpoint.path.includes('/paas/api/v1_0/paas/codes')) ? 300000 : 120000; // 5 minutes for Get Codes, 2 minutes for others
       
       // Create a more robust timeout implementation
       const controller = new AbortController();
@@ -7279,7 +7320,7 @@ const APIReferencePage = ({ theme }: APIReferencePageProps) => {
       console.log('🚀 Making API call to:', url);
       console.log('🚀 Request method:', endpoint.method);
       console.log('🚀 Request headers:', Object.fromEntries(requestHeaders.entries()));
-      if (endpoint.path.includes('/raas/masters/v1/codes')) {
+      if (endpoint.path.includes('/raas/masters/v1/codes') || endpoint.path.includes('/paas/api/v1_0/paas/codes')) {
         console.log('🎯 Get Codes API: Using 5-minute timeout for large response');
       }
       
@@ -7480,17 +7521,19 @@ const APIReferencePage = ({ theme }: APIReferencePageProps) => {
           <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
             <nav className="flex flex-wrap -mb-px">
               {Object.entries({
-                [activeTab]: activeTab === 'auth' ? 'Authentication' : 
-                            activeTab === 'masters' ? 'Codes & Masters' : 
-                            activeTab === 'remittance' ? 'Remittance API' : 
-                            'Customer API'
+                auth: 'Authentication',
+                masters: 'Codes & Masters',
+                remittance: 'Remittance API',
+                ...(portalType !== 'lfi' && { customer: 'Customer API' })
               }).map(([key, label]) => (
             <button
                   key={key}
                   onClick={() => handleTabChange(key)}
                   className={clsx(
                     'py-4 px-4 text-center border-b-2 font-medium text-sm sm:text-base whitespace-nowrap',
-                    'border-primary-500 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+                    activeTab === key
+                      ? 'border-primary-500 text-primary-600 dark:border-primary-400 dark:text-primary-400'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-600'
                   )}
                 >
                   {label}
