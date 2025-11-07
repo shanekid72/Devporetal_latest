@@ -6,7 +6,6 @@ import ScrollRevealContainer from '../components/ScrollRevealContainer';
 import ApiEndpointCard from '../components/ApiEndpointCard';
 import CollapsibleSection from '../components/CollapsibleSection';
 import AskPageSection from '../components/AskPageSection';
-import clsx from 'clsx';
 import { Theme } from '../types';
 import { validateFilters } from '../utils/filterValidation';
 import { filterCodesByType } from '../utils/clientSideFilter';
@@ -47,7 +46,7 @@ const clearTransactionRefNumber = () => {
 };
 
 // Function to automatically create a quote
-const createQuoteAutomatically = async (portalType: 'whitelabelled' | 'lfi' | null = null) => {
+const createQuoteAutomatically = async (portalType: 'whitelabelled' | 'lfi' | 'ewa' | 'wps' | null = null) => {
   try {
     console.log('🔄 Automatically creating quote...');
     
@@ -6949,16 +6948,16 @@ const APIReferencePage = ({ theme }: APIReferencePageProps) => {
   const navigate = useNavigate();
   
   // Get portal type from localStorage
-  const [portalType, setPortalType] = useState<'whitelabelled' | 'lfi' | null>(() => {
+  const [portalType, setPortalType] = useState<'whitelabelled' | 'lfi' | 'ewa' | 'wps' | null>(() => {
     const saved = localStorage.getItem('selected_portal_type');
-    return (saved === 'whitelabelled' || saved === 'lfi') ? saved : 'whitelabelled';
+    return (saved === 'whitelabelled' || saved === 'lfi' || saved === 'ewa' || saved === 'wps') ? saved : 'whitelabelled';
   });
   
   // Listen for portal type changes (from same tab and other tabs)
   useEffect(() => {
     const handlePortalTypeChange = () => {
       const saved = localStorage.getItem('selected_portal_type');
-      setPortalType((saved === 'whitelabelled' || saved === 'lfi') ? saved : 'whitelabelled');
+      setPortalType((saved === 'whitelabelled' || saved === 'lfi' || saved === 'ewa' || saved === 'wps') ? saved : 'whitelabelled');
       console.log('🔄 Portal type changed to:', saved || 'whitelabelled');
     };
     
@@ -7033,13 +7032,6 @@ const APIReferencePage = ({ theme }: APIReferencePageProps) => {
     setFilteredEndpoints(endpoints);
   }, [activeTab, searchQuery, selectedMethod, portalType]);
   
-  // Handle tab change
-  const handleTabChange = (tabId: string) => {
-    setActiveTab(tabId);
-    navigate(`/api-reference/${tabId}`);
-    setSearchQuery('');
-    setSelectedMethod(null);
-  };
   
   // Clear filters
   const clearFilters = () => {
@@ -7514,33 +7506,16 @@ const APIReferencePage = ({ theme }: APIReferencePageProps) => {
       <ScrollRevealContainer>
         <div className="mb-8">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
-            API Endpoints
-          </h2>
-          
-          {/* API Categories Tabs */}
-          <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
-            <nav className="flex flex-wrap -mb-px">
-              {Object.entries({
+            {(() => {
+              const tabLabels: Record<string, string> = {
                 auth: 'Authentication',
                 masters: 'Codes & Masters',
                 remittance: 'Remittance API',
-                ...(portalType !== 'lfi' && { customer: 'Customer API' })
-              }).map(([key, label]) => (
-            <button
-                  key={key}
-                  onClick={() => handleTabChange(key)}
-                  className={clsx(
-                    'py-4 px-4 text-center border-b-2 font-medium text-sm sm:text-base whitespace-nowrap',
-                    activeTab === key
-                      ? 'border-primary-500 text-primary-600 dark:border-primary-400 dark:text-primary-400'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 dark:hover:border-gray-600'
-                  )}
-                >
-                  {label}
-            </button>
-          ))}
-            </nav>
-        </div>
+                customer: 'Customer API'
+              };
+              return tabLabels[activeTab] || 'API Endpoints';
+            })()}
+          </h2>
           
           {/* Search and Filters */}
           <div className="flex flex-col sm:flex-row gap-4 mb-6">

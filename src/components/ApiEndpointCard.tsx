@@ -335,7 +335,7 @@ const ApiEndpointCard: React.FC<ApiEndpointCardProps> = ({
         onClick={() => setExpanded(!expanded)}
       >
         <div className="flex items-center space-x-3">
-          {!title.startsWith('Section:') && (
+          {title && !title.startsWith('Section:') && (
             <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border ${getMethodColor()}`}>
               {method}
             </span>

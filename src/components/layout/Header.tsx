@@ -1,10 +1,10 @@
-import { Moon, Sun, Menu, Search, X, ChevronDown } from 'lucide-react';
+import { Moon, Sun, Menu, Search, X, ChevronDown, Home } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu as HeadlessMenu, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { Theme } from '../../types';
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 
 interface HeaderProps {
@@ -36,11 +36,13 @@ const Header = ({ theme, onThemeToggle, onMenuClick, showHamburger = true }: Hea
   const integrationItems = [
     { label: 'White-labelled', path: '/integration/white-labelled' },
     { label: 'LFI', path: '/integration/lfi' },
+    { label: 'WPS', path: '/integration/wps' },
+    { label: 'Bill Payments', path: '/integration/bill-payments' },
+    { label: 'EWA', path: '/integration/ewa' },
   ];
 
-  const useCaseItems = [
-    { label: 'WPS', path: '/use-case/wps' },
-    { label: 'Bill Payments', path: '/use-case/bill-payments' },
+  const useCaseItems: Array<{ label: string; path: string }> = [
+    // Keep empty for future use
   ];
 
   const directLinks = [
@@ -131,6 +133,24 @@ const Header = ({ theme, onThemeToggle, onMenuClick, showHamburger = true }: Hea
               className="h-16 w-auto"
             />
           </div>
+
+          {/* Home Button - show on PortalOverviewPage */}
+          {location.pathname === '/portal-overview' && (
+            <Link
+              to="/"
+              className="flex items-center space-x-2 px-3 py-2 rounded-md text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 interactive-glow font-display group"
+            >
+              <motion.div
+                whileHover={{ scale: 1.1, rotate: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Home className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              </motion.div>
+              <span className="text-sm font-medium group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                Home
+              </span>
+            </Link>
+          )}
         </div>
 
         {/* Middle: Navigation items - show on all pages except home */}

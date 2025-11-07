@@ -7,6 +7,69 @@ interface CustomerBusinessPageProps {
 }
 
 const CustomerBusinessPage = ({ theme }: CustomerBusinessPageProps) => {
+  
+  // API Base URL - Update this to your sandbox or production URL
+  const API_BASE_URL = 'https://drap-sandbox.digitnine.com';
+
+  // Handler for Try It Now button - creates a closure for each endpoint
+  const createHandleTryIt = (endpoint: APIEndpoint) => async (
+    requestBody: string,
+    headers: Record<string, string>,
+    queryParams?: Record<string, string>,
+    pathParams?: Record<string, string>
+  ): Promise<string> => {
+    try {
+      // Build the full URL
+      let apiPath = endpoint.path;
+      
+      // Replace path parameters if any
+      if (pathParams) {
+        Object.entries(pathParams).forEach(([key, value]) => {
+          apiPath = apiPath.replace(`{${key}}`, value);
+        });
+      }
+
+      // Add query parameters
+      const queryString = queryParams && Object.keys(queryParams).length > 0
+        ? '?' + new URLSearchParams(queryParams).toString()
+        : '';
+
+      const fullUrl = `${API_BASE_URL}${apiPath}${queryString}`;
+
+      console.log('🚀 Making API request to:', fullUrl);
+      console.log('📝 Request body:', requestBody);
+      console.log('📋 Headers:', headers);
+
+      // Make the API call
+      const response = await fetch(fullUrl, {
+        method: endpoint.method,
+        headers: {
+          'Content-Type': 'application/json',
+          ...headers,
+        },
+        body: endpoint.method !== 'GET' ? requestBody : undefined,
+      });
+
+      // Get response text
+      const responseText = await response.text();
+      
+      // Try to parse as JSON for better formatting
+      try {
+        const responseJson = JSON.parse(responseText);
+        return JSON.stringify(responseJson, null, 2);
+      } catch {
+        // If not JSON, return as-is
+        return responseText || `Status: ${response.status} ${response.statusText}`;
+      }
+    } catch (error) {
+      console.error('❌ API Error:', error);
+      return JSON.stringify({
+        error: 'API Request Failed',
+        message: error instanceof Error ? error.message : 'Unknown error occurred',
+        details: 'Please check your network connection and API credentials'
+      }, null, 2);
+    }
+  };
 
   const corporateCustomerEndpoints: APIEndpoint[] = [
     {
@@ -423,6 +486,7 @@ print(data)`
               queryParams={endpoint.queryParams}
               codeExamples={endpoint.codeExamples}
               theme={theme}
+              onTryIt={createHandleTryIt(endpoint)}
             />
           </ScrollRevealContainer>
         ))}

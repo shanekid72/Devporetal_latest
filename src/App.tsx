@@ -24,13 +24,43 @@ const APIReferencePage = lazy(() => import('./pages/APIReferencePage'));
 const SandboxTestingPage = lazy(() => import('./pages/SandboxTestingPage'));
 const APIReference = lazy(() => import('./pages/APIReference'));
 const PlaceholderPage = lazy(() => import('./pages/PlaceholderPage'));
+const BankPoliciesPage = lazy(() => import('./pages/BankPoliciesPage'));
+
+// Bill Payments pages
+const BillPaymentsIntroductionPage = lazy(() => import('./pages/bill-payments/BillPaymentsIntroductionPage'));
+const BillPaymentsAuthenticationPage = lazy(() => import('./pages/bill-payments/BillPaymentsAuthenticationPage'));
+const GetRatesPage = lazy(() => import('./pages/bill-payments/masters/GetRatesPage'));
+const GetCategoriesPage = lazy(() => import('./pages/bill-payments/masters/GetCategoriesPage'));
+const GetProvidersPage = lazy(() => import('./pages/bill-payments/masters/GetProvidersPage'));
+const GetBillersPage = lazy(() => import('./pages/bill-payments/masters/GetBillersPage'));
+const GetBillerCustomParamsPage = lazy(() => import('./pages/bill-payments/masters/GetBillerCustomParamsPage'));
+const GetBillerPlansPage = lazy(() => import('./pages/bill-payments/masters/GetBillerPlansPage'));
+const CreateQuotePage = lazy(() => import('./pages/bill-payments/transactions/CreateQuotePage'));
+const CreateTransactionPage = lazy(() => import('./pages/bill-payments/transactions/CreateTransactionPage'));
+const ConfirmTransactionPage = lazy(() => import('./pages/bill-payments/transactions/ConfirmTransactionPage'));
+const EnquireTransactionPage = lazy(() => import('./pages/bill-payments/transactions/EnquireTransactionPage'));
 
 // Integration pages
 const WhiteLabelledPage = lazy(() => import('./pages/integration/WhiteLabelledPage'));
 const LFIPage = lazy(() => import('./pages/integration/LFIPage'));
+const EWAPage = lazy(() => import('./pages/integration/EWAPage'));
+
+// EWA API pages
+const EWAAuthenticationPage = lazy(() => import('./pages/integration/ewa/EWAAuthenticationPage'));
+const CheckEligibilityPage = lazy(() => import('./pages/integration/ewa/CheckEligibilityPage'));
+const FetchPricePage = lazy(() => import('./pages/integration/ewa/FetchPricePage'));
+const RecordConsentPage = lazy(() => import('./pages/integration/ewa/RecordConsentPage'));
+const CreateSalaryAdvancePage = lazy(() => import('./pages/integration/ewa/CreateSalaryAdvancePage'));
+const GetSalaryAdvancePage = lazy(() => import('./pages/integration/ewa/GetSalaryAdvancePage'));
+const CancelApplicationPage = lazy(() => import('./pages/integration/ewa/CancelApplicationPage'));
+
+// WPS API pages
+const WPSAuthenticationPage = lazy(() => import('./pages/integration/wps/WPSAuthenticationPage'));
+const WPSUploadSalaryPage = lazy(() => import('./pages/integration/wps/WPSUploadSalaryPage'));
+const WPSGetFileStatusPage = lazy(() => import('./pages/integration/wps/WPSGetFileStatusPage'));
 
 // Info pages
-const UseCaseWPSPage = lazy(() => import('./pages/UseCaseWPSPage'));
+const WPSPage = lazy(() => import('./pages/integration/WPSPage'));
 const UseCaseBillPaymentsPage = lazy(() => import('./pages/UseCaseBillPaymentsPage'));
 const SupportPage = lazy(() => import('./pages/SupportPage'));
 const DocumentationPage = lazy(() => import('./pages/DocumentationPage'));
@@ -130,6 +160,7 @@ function App() {
           location.pathname.startsWith('/agent-toolkit') ||
           location.pathname.startsWith('/sandbox-testing') ||
           location.pathname.startsWith('/guides/') ||
+          location.pathname.startsWith('/policies') ||
           location.pathname.startsWith('/downloads') ||
           location.pathname.startsWith('/changelog')
         }
@@ -154,10 +185,41 @@ function App() {
             {/* Integration Model - with sidebar */}
             <Route path="/integration/white-labelled" element={<WhiteLabelledPage />} />
             <Route path="/integration/lfi" element={<LFIPage />} />
+            <Route path="/integration/ewa" element={<EWAPage />} />
+            <Route path="/integration/wps" element={<WPSPage />} />
+            
+            {/* EWA APIs - with sidebar */}
+            <Route path="/integration/ewa/authentication" element={<EWAAuthenticationPage theme={theme} />} />
+            <Route path="/integration/ewa/check-eligibility" element={<CheckEligibilityPage />} />
+            <Route path="/integration/ewa/fetch-price" element={<FetchPricePage />} />
+            <Route path="/integration/ewa/record-consent" element={<RecordConsentPage />} />
+            <Route path="/integration/ewa/create-salary-advance" element={<CreateSalaryAdvancePage />} />
+            <Route path="/integration/ewa/get-salary-advance" element={<GetSalaryAdvancePage />} />
+            <Route path="/integration/ewa/cancel-application" element={<CancelApplicationPage />} />
+            
+            {/* WPS APIs - with sidebar */}
+            <Route path="/integration/wps/authentication" element={<WPSAuthenticationPage theme={theme} />} />
+            <Route path="/integration/wps/upload-salary" element={<WPSUploadSalaryPage theme={theme} />} />
+            <Route path="/integration/wps/get-file-status" element={<WPSGetFileStatusPage theme={theme} />} />
 
-            {/* Use Case - no sidebar */}
-            <Route path="/use-case/wps" element={<UseCaseWPSPage />} />
-            <Route path="/use-case/bill-payments" element={<UseCaseBillPaymentsPage />} />
+            {/* Integration Model - Bill Payments - with sidebar */}
+            <Route path="/integration/bill-payments" element={<UseCaseBillPaymentsPage />} />
+            <Route path="/integration/bill-payments/introduction" element={<BillPaymentsIntroductionPage />} />
+            <Route path="/integration/bill-payments/authentication" element={<BillPaymentsAuthenticationPage />} />
+            
+            {/* Bill Payments - Masters APIs */}
+            <Route path="/integration/bill-payments/masters/get-rates" element={<GetRatesPage />} />
+            <Route path="/integration/bill-payments/masters/get-categories" element={<GetCategoriesPage />} />
+            <Route path="/integration/bill-payments/masters/get-providers" element={<GetProvidersPage />} />
+            <Route path="/integration/bill-payments/masters/get-billers" element={<GetBillersPage />} />
+            <Route path="/integration/bill-payments/masters/get-biller-custom-params" element={<GetBillerCustomParamsPage />} />
+            <Route path="/integration/bill-payments/masters/get-biller-plans" element={<GetBillerPlansPage />} />
+            
+            {/* Bill Payments - Transaction APIs */}
+            <Route path="/integration/bill-payments/transactions/create-quote" element={<CreateQuotePage />} />
+            <Route path="/integration/bill-payments/transactions/create-transaction" element={<CreateTransactionPage />} />
+            <Route path="/integration/bill-payments/transactions/confirm-transaction" element={<ConfirmTransactionPage />} />
+            <Route path="/integration/bill-payments/transactions/enquire-transaction" element={<EnquireTransactionPage />} />
 
             {/* Info pages - no sidebar */}
             <Route path="/support" element={<SupportPage />} />
@@ -193,6 +255,7 @@ function App() {
             <Route path="/guides/transactions" element={<PlaceholderPage />} />
             <Route path="/guides/rates" element={<PlaceholderPage />} />
             <Route path="/guides/errors" element={<PlaceholderPage />} />
+            <Route path="/policies" element={<BankPoliciesPage />} />
             <Route path="/downloads" element={<PlaceholderPage />} />
             <Route path="/changelog" element={<PlaceholderPage />} />
 

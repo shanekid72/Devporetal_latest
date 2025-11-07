@@ -14,16 +14,16 @@ const APIReference = ({ theme }: APIReferenceProps) => {
   const [error] = useState<string | null>(null);
   
   // Portal type state
-  const [portalType, setPortalType] = useState<'whitelabelled' | 'lfi'>(() => {
+  const [portalType, setPortalType] = useState<'whitelabelled' | 'lfi' | 'ewa'>(() => {
     const saved = localStorage.getItem('selected_portal_type');
-    return saved === 'lfi' ? 'lfi' : 'whitelabelled';
+    return (saved === 'lfi' || saved === 'ewa') ? saved : 'whitelabelled';
   });
   
   // Listen for portal type changes
   useEffect(() => {
     const handlePortalTypeChange = () => {
       const saved = localStorage.getItem('selected_portal_type');
-      setPortalType(saved === 'lfi' ? 'lfi' : 'whitelabelled');
+      setPortalType((saved === 'lfi' || saved === 'ewa') ? saved : 'whitelabelled');
     };
 
     window.addEventListener('portalTypeChanged', handlePortalTypeChange);

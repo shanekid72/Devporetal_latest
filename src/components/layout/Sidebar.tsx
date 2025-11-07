@@ -105,10 +105,53 @@ const navigationItems: NavigationItem[] = [
     icon: 'FileText',
     children: [
       { id: 'api-swagger', title: 'API Specification', href: '/api-reference-swagger' },
+      { id: 'policies', title: 'Policies', href: '/policies' },
       { id: 'downloads', title: 'Downloads', href: '/downloads' },
       { id: 'changelog', title: 'Changelog', href: '/changelog' },
     ],
   }
+];
+
+// Bill Payments navigation items
+const billPaymentsNavigationItems: NavigationItem[] = [
+  {
+    id: 'bp-getting-started',
+    title: 'Getting Started',
+    icon: 'BookOpen',
+    children: [
+      { id: 'bp-introduction', title: 'Introduction', href: '/bill-payments/introduction' },
+      { id: 'bp-authentication', title: 'Authentication', href: '/bill-payments/authentication' },
+    ],
+  },
+  {
+    id: 'bp-core-resources',
+    title: 'Core Resources',
+    icon: 'Code',
+    children: [
+      {
+        id: 'bp-masters',
+        title: 'Masters',
+        children: [
+          { id: 'bp-get-rates', title: 'Get Rates', href: '/bill-payments/masters/get-rates' },
+          { id: 'bp-get-categories', title: 'Get Categories', href: '/bill-payments/masters/get-categories' },
+          { id: 'bp-get-providers', title: 'Get Providers', href: '/bill-payments/masters/get-providers' },
+          { id: 'bp-get-billers', title: 'Get Billers', href: '/bill-payments/masters/get-billers' },
+          { id: 'bp-get-biller-params', title: 'Get Biller Custom Params', href: '/bill-payments/masters/get-biller-custom-params' },
+          { id: 'bp-get-biller-plans', title: 'Get Biller Plans', href: '/bill-payments/masters/get-biller-plans' },
+        ],
+      },
+      {
+        id: 'bp-transactions',
+        title: 'Transactions',
+        children: [
+          { id: 'bp-create-quote', title: 'Create Quote', href: '/bill-payments/transactions/create-quote' },
+          { id: 'bp-create-transaction', title: 'Create Transaction', href: '/bill-payments/transactions/create-transaction' },
+          { id: 'bp-confirm-transaction', title: 'Confirm Transaction', href: '/bill-payments/transactions/confirm-transaction' },
+          { id: 'bp-enquire-transaction', title: 'Enquire Transaction', href: '/bill-payments/transactions/enquire-transaction' },
+        ],
+      },
+    ],
+  },
 ];
 
 const iconMap = {
@@ -144,10 +187,156 @@ const getAllExpandableIds = (items: NavigationItem[]): string[] => {
   return expandableIds;
 };
 
+// WPS-specific navigation items
+const wpsNavigationItems: NavigationItem[] = [
+  {
+    id: 'getting-started',
+    title: 'Getting Started',
+    icon: 'BookOpen',
+    children: [
+      { id: 'api-introduction', title: 'API Introduction', href: '/introduction' },
+      { id: 'authentication', title: 'Authentication', href: '/authentication' },
+    ],
+  },
+  {
+    id: 'core-resources',
+    title: 'Core Resources', 
+    icon: 'Code',
+    children: [
+      { id: 'wps-authentication', title: 'Authentication', href: '/integration/wps/authentication' },
+      { id: 'wps-upload-salary', title: 'Upload Salary Information', href: '/integration/wps/upload-salary' },
+      { id: 'wps-get-file-status', title: 'Get File Status', href: '/integration/wps/get-file-status' },
+    ],
+  },
+  {
+    id: 'agent-toolkit',
+    title: 'Agent Toolkit',
+    icon: 'Cpu',
+    children: [
+      { id: 'agent-intro', title: 'Introduction', href: '/agent-toolkit' },
+      {
+        id: 'quickstart-guides',
+        title: 'Quickstart Guides',
+        icon: 'Zap',
+        children: [
+          { id: 'payments-quickstart', title: 'Payments', href: '/agent-toolkit/quickstart/payments' },
+          { id: 'mcp-quickstart', title: 'MCP', href: '/agent-toolkit/quickstart/mcp' },
+          { id: 'llm-integration', title: 'LLM Integration', href: '/agent-toolkit/quickstart/llm-integration' }
+        ]
+      },
+      {
+        id: 'reference',
+        title: 'Reference',
+        icon: 'FileText',
+        children: [
+          { id: 'agent-tools', title: 'Agent Tools', href: '/agent-toolkit/reference/agent-tools' }
+        ]
+      },
+      {
+        id: 'best-practices',
+        title: 'Best Practices',
+        icon: 'Target',
+        children: [
+          { id: 'integration-practices', title: 'Integration', href: '/agent-toolkit/best-practices/integration' },
+          { id: 'prompting-practices', title: 'Prompting & Agents', href: '/agent-toolkit/best-practices/prompting' }
+        ]
+      }
+    ],
+  },
+  {
+    id: 'resources',
+    title: 'Resources',
+    icon: 'Settings',
+    children: [
+      { id: 'sandbox-testing', title: 'Sandbox Testing', href: '/sandbox-testing' },
+      { id: 'bank-policies', title: 'Bank Policies', href: '/policies' },
+    ],
+  },
+];
+
+// EWA-specific navigation items
+const ewaNavigationItems: NavigationItem[] = [
+  {
+    id: 'getting-started',
+    title: 'Getting Started',
+    icon: 'BookOpen',
+    children: [
+      { id: 'api-introduction', title: 'API Introduction', href: '/introduction' },
+      { id: 'authentication', title: 'Authentication', href: '/authentication' },
+    ],
+  },
+  {
+    id: 'core-resources',
+    title: 'Core Resources', 
+    icon: 'Code',
+    children: [
+      { id: 'ewa-authentication', title: 'Authentication', href: '/integration/ewa/authentication' },
+      { id: 'check-eligibility', title: 'Check Eligibility', href: '/integration/ewa/check-eligibility' },
+      { id: 'fetch-price', title: 'Fetch Price', href: '/integration/ewa/fetch-price' },
+      { id: 'record-consent', title: 'Record Consent', href: '/integration/ewa/record-consent' },
+      { id: 'create-salary-advance', title: 'Create Salary Advance', href: '/integration/ewa/create-salary-advance' },
+      { id: 'get-salary-advance', title: 'Get Salary Advance', href: '/integration/ewa/get-salary-advance' },
+      { id: 'cancel-application', title: 'Cancel Application', href: '/integration/ewa/cancel-application' },
+    ],
+  },
+  {
+    id: 'agent-toolkit',
+    title: 'Agent Toolkit',
+    icon: 'Cpu',
+    children: [
+      { id: 'agent-intro', title: 'Introduction', href: '/agent-toolkit' },
+      {
+        id: 'quickstart-guides',
+        title: 'Quickstart Guides',
+        icon: 'Zap',
+        children: [
+          { id: 'payments-quickstart', title: 'Payments', href: '/agent-toolkit/quickstart/payments' },
+          { id: 'mcp-quickstart', title: 'MCP', href: '/agent-toolkit/quickstart/mcp' },
+          { id: 'llm-integration', title: 'LLM Integration', href: '/agent-toolkit/quickstart/llm-integration' }
+        ]
+      },
+      {
+        id: 'reference',
+        title: 'Reference',
+        icon: 'FileText',
+        children: [
+          { id: 'agent-tools', title: 'Agent Tools', href: '/agent-toolkit/reference/agent-tools' }
+        ]
+      },
+      {
+        id: 'best-practices',
+        title: 'Best Practices',
+        icon: 'Target',
+        children: [
+          { id: 'integration-practices', title: 'Integration', href: '/agent-toolkit/best-practices/integration' },
+          { id: 'prompting-practices', title: 'Prompting & Agents', href: '/agent-toolkit/best-practices/prompting' }
+        ]
+      }
+    ],
+  },
+  {
+    id: 'resources',
+    title: 'Resources',
+    icon: 'Settings',
+    children: [
+      { id: 'sandbox-testing', title: 'Sandbox Testing', href: '/sandbox-testing' },
+      { id: 'bank-policies', title: 'Bank Policies', href: '/policies' },
+    ],
+  },
+];
+
 // Helper function to filter navigation based on portal type
-const getFilteredNavigation = (portalType: 'whitelabelled' | 'lfi'): NavigationItem[] => {
+const getFilteredNavigation = (portalType: 'whitelabelled' | 'lfi' | 'ewa' | 'wps'): NavigationItem[] => {
   if (portalType === 'whitelabelled') {
     return navigationItems;
+  }
+  
+  if (portalType === 'ewa') {
+    return ewaNavigationItems;
+  }
+  
+  if (portalType === 'wps') {
+    return wpsNavigationItems;
   }
   
   // For LFI: Remove "Customer Onboarding" and "Beneficiary Onboarding" from Core Resources
@@ -168,18 +357,21 @@ const getFilteredNavigation = (portalType: 'whitelabelled' | 'lfi'): NavigationI
 const Sidebar = ({ onClose }: SidebarProps) => {
   const location = useLocation();
   // Portal type selection state (accordion behavior)
-  const [selectedPortalType, setSelectedPortalType] = useState<'whitelabelled' | 'lfi'>(() => {
+  const [selectedPortalType, setSelectedPortalType] = useState<'whitelabelled' | 'lfi' | 'ewa' | 'wps'>(() => {
     const saved = localStorage.getItem('selected_portal_type');
-    return (saved === 'whitelabelled' || saved === 'lfi') ? saved : 'whitelabelled';
+    return (saved === 'whitelabelled' || saved === 'lfi' || saved === 'ewa' || saved === 'wps') ? saved : 'whitelabelled';
   });
   // All sections collapsed by default on first load
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  
+  // Check if we're on a bill payments route
+  const isBillPaymentsRoute = location.pathname.startsWith('/integration/bill-payments');
   
   // Listen for portal type changes
   useEffect(() => {
     const handlePortalTypeChange = () => {
       const saved = localStorage.getItem('selected_portal_type');
-      const newType = (saved === 'whitelabelled' || saved === 'lfi') ? saved : 'whitelabelled';
+      const newType = (saved === 'whitelabelled' || saved === 'lfi' || saved === 'ewa' || saved === 'wps') ? saved : 'whitelabelled';
       setSelectedPortalType(newType);
     };
 
@@ -195,8 +387,10 @@ const Sidebar = ({ onClose }: SidebarProps) => {
     };
   }, []);
   
-  // Get filtered navigation based on selected portal type
-  const currentNavigation = getFilteredNavigation(selectedPortalType);
+  // Get filtered navigation based on route
+  const currentNavigation = isBillPaymentsRoute 
+    ? billPaymentsNavigationItems 
+    : getFilteredNavigation(selectedPortalType);
 
   const toggleExpanded = (itemId: string) => {
     setExpandedItems(prev =>
@@ -376,19 +570,21 @@ const Sidebar = ({ onClose }: SidebarProps) => {
         </motion.button>
       </motion.div>
 
-      {/* Model Indicator Badge - replaces search */}
-      <motion.div 
-        className="px-4 py-3 border-b border-gray-200 dark:border-gray-800 glass-surface"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, delay: 0.1 }}
-      >
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-700">
-          <span className="text-xs font-semibold text-blue-700 dark:text-blue-300">
-            {selectedPortalType === 'lfi' ? '📍 LFI' : '📍 White-labelled'}
-          </span>
-        </div>
-      </motion.div>
+      {/* Model Indicator Badge - only show for RaaS/PaaS, not for Bill Payments */}
+      {!isBillPaymentsRoute && (
+        <motion.div 
+          className="px-4 py-3 border-b border-gray-200 dark:border-gray-800 glass-surface"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-700">
+            <span className="text-xs font-semibold text-blue-700 dark:text-blue-300">
+              {selectedPortalType === 'ewa' ? '📍 EWA' : selectedPortalType === 'lfi' ? '📍 LFI' : selectedPortalType === 'wps' ? '📍 WPS' : '📍 White-labelled'}
+            </span>
+          </div>
+        </motion.div>
+      )}
 
       {/* Navigation Items */}
       <div className="flex-1 overflow-y-auto">

@@ -159,7 +159,8 @@ export function getFilterRequirement(endpoint: string): FilterRequirement | null
  * @returns True if filters are required
  */
 export function requiresFilters(endpoint: string): boolean {
-  return FILTER_REQUIREMENTS.some(req => endpoint.includes(req.endpoint));
+  if (!endpoint) return false;
+  return FILTER_REQUIREMENTS.some(req => req.endpoint && endpoint.includes(req.endpoint));
 }
 
 /**
