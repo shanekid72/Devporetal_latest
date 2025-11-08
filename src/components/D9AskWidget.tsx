@@ -209,7 +209,7 @@ const D9AskWidget: React.FC<D9AskWidgetProps> = ({
           boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
         }}
         aria-label="D9Hub - AI Documentation Assistant"
-        title="Ask D9Hub anything about our API documentation"
+        title="Ask me anything"
       >
         {/* Animated Icon - Much Larger */}
         <D9AnimatedIcon size="5rem" className="flex-shrink-0" />

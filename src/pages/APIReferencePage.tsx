@@ -2458,69 +2458,173 @@ console.log(data);`
         {
           id: 'account-validation',
           title: 'Account Validation',
-          method: 'POST',
-          path: '/raas/masters/v1/account/validate',
+          method: 'GET',
+          path: '/raas/masters/v1/accounts/validation',
           description: 'Validate the account number length',
           requestHeaders: {
             'Content-Type': 'application/json',
-            'sender': 'testagentae',
-            'channel': 'Direct',
-            'company': '784825',
-            'branch': '784826',
             'Authorization': 'Bearer {{access_token}}'
           },
-          requestBody: `{
-  "bank_id": "11232",
-  "branch_id": "22345",
-  "account_number": "1234567890",
-  "account_type": "SAVINGS",
-  "country_code": "PK"
-}`,
+          queryParams: [
+            {
+              name: 'correspondent',
+              description: 'Correspondent',
+              required: false
+            },
+            {
+              name: 'receiving_country_code',
+              description: 'Receiving country code',
+              required: true
+            },
+            {
+              name: 'receiving_mode',
+              description: 'Receiving mode',
+              required: false
+            },
+            {
+              name: 'iso_code',
+              description: 'Iso code [iso_code, routing_code, sort_code either one required]',
+              required: false
+            },
+            {
+              name: 'routing_code',
+              description: 'Routing code [iso_code, routing_code, sort_code either one required]',
+              required: false
+            },
+            {
+              name: 'sort_code',
+              description: 'Sort code [iso_code, routing_code, sort_code either one required]',
+              required: false
+            },
+            {
+              name: 'account_number',
+              description: 'Account number',
+              required: false
+            },
+            {
+              name: 'iban',
+              description: 'iban',
+              required: false
+            },
+            {
+              name: 'bank_id',
+              description: 'Internal Id of bank',
+              required: false
+            },
+            {
+              name: 'branch_id',
+              description: 'Internal Id of branch',
+              required: false
+            },
+            {
+              name: 'receiver_first_name',
+              description: 'first name. Mandatory only for C2C and B2C.',
+              required: false
+            },
+            {
+              name: 'receiver_middle_name',
+              description: 'middle name',
+              required: false
+            },
+            {
+              name: 'receiver_last_name',
+              description: 'last name. Mandatory only for C2C and B2C.',
+              required: false
+            },
+            {
+              name: 'receiver_name',
+              description: 'Mandatory only for C2B and B2B.',
+              required: false
+            },
+            {
+              name: 'service_type',
+              description: 'C2C, B2C, C2B and B2B.',
+              required: false
+            },
+            {
+              name: 'purpose_of_txn',
+              description: 'Purpose of the transaction',
+              required: false
+            },
+            {
+              name: 'sending_currency_code',
+              description: 'Send currency; ISO 3 Char currency code',
+              required: false
+            },
+            {
+              name: 'receiving_currency_code',
+              description: 'Beneficiary receive currency; ISO 3 Char currency code',
+              required: true
+            },
+            {
+              name: 'sender_first_name',
+              description: 'sender first name',
+              required: false
+            },
+            {
+              name: 'sender_middle_name',
+              description: 'sender middle name',
+              required: false
+            },
+            {
+              name: 'sender_last_name',
+              description: 'sender last name',
+              required: false
+            },
+            {
+              name: 'sender_name',
+              description: 'sender name. Mandatory only for C2B and B2B.',
+              required: false
+            }
+          ],
           codeExamples: [
             {
               language: 'curl',
               label: 'cURL',
-              code: `curl -X POST "https://drap-sandbox.digitnine.com/raas/masters/v1/account/validate" \\
+              code: `curl -X GET "https://drap-sandbox.digitnine.com/raas/masters/v1/accounts/validation?receiving_country_code=PK&receiving_currency_code=PKR&account_number=12345678901234&iso_code=123456" \\
 -H "Content-Type: application/json" \\
--H "sender: testagentae" \\
--H "channel: Direct" \\
--H "company: 784825" \\
--H "branch: 784826" \\
--H "Authorization: Bearer {{access_token}}" \\
--d '{
-  "bank_id": "11232",
-  "branch_id": "22345",
-  "account_number": "1234567890",
-  "account_type": "SAVINGS",
-  "country_code": "PK"
-}'`
+-H "Authorization: Bearer {{access_token}}"`
             },
             {
               language: 'javascript',
               label: 'JavaScript',
-              code: `const requestBody = {
-  bank_id: '11232',
-  branch_id: '22345',
-  account_number: '1234567890',
-  account_type: 'SAVINGS',
-  country_code: 'PK'
-};
+              code: `const params = new URLSearchParams({
+  receiving_country_code: 'PK',
+  receiving_currency_code: 'PKR',
+  account_number: '12345678901234',
+  iso_code: '123456'
+});
 
-const response = await fetch('http://localhost:3001/api/raas/masters/v1/account/validate', {
-  method: 'POST',
+const response = await fetch('https://drap-sandbox.digitnine.com/raas/masters/v1/accounts/validation?' + params, {
+  method: 'GET',
   headers: {
     'Content-Type': 'application/json',
-    'sender': 'testagentae',
-    'channel': 'Direct',
-    'company': '784825',
-    'branch': '784826',
     'Authorization': 'Bearer ' + accessToken
-  },
-  body: JSON.stringify(requestBody)
+  }
 });
 
 const data = await response.json();
 console.log(data);`
+            },
+            {
+              language: 'python',
+              label: 'Python',
+              code: `import requests
+
+url = "https://drap-sandbox.digitnine.com/raas/masters/v1/accounts/validation"
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + access_token
+}
+params = {
+    "receiving_country_code": "PK",
+    "receiving_currency_code": "PKR",
+    "account_number": "12345678901234",
+    "iso_code": "123456"
+}
+
+response = requests.get(url, headers=headers, params=params)
+print(response.json())`
             }
           ],
           responses: [{
@@ -2528,34 +2632,22 @@ console.log(data);`
             description: 'Successful validation',
             example: {
               status: 'success',
-              status_code: '200',
-              status_message: 'Success',
-              data: {
-                is_valid: true,
-                account_holder_name: 'John Smith',
-                account_status: 'ACTIVE',
-                validation_reference: 'VAL123456789'
-              }
+              status_code: 200,
+              data: 'Validation successful'
             }
           }, {
-            status: 400,
-            description: 'Invalid account details',
+            status: 406,
+            description: 'Validation failed',
             example: {
-              status: 'error',
-              status_code: '400',
-              status_message: 'Invalid account details',
-              error_code: '40001',
-              error_message: 'Account number is invalid or does not exist'
+              status: 'failure',
+              status_code: 406,
+              error_code: 8073102,
+              message: 'Bank account number length is not acceptable. Allowed length is any0f:14,15,16'
             }
           }],
           guidelines: `
-<h5>API Rules</h5>
-<ul>
-  <li>This endpoint validates bank account details before initiating a transaction</li>
-  <li>The validation checks if the account exists and is active</li>
-  <li>The response includes the account holder name if validation is successful</li>
-  <li>A validation reference is returned for audit and tracking purposes</li>
-</ul>
+<h5>Overview</h5>
+<p>Validate the account number length</p>
 
 <h5>Required Headers</h5>
 <table class="w-full text-sm">
@@ -2563,7 +2655,6 @@ console.log(data);`
     <tr class="text-left bg-gray-100 dark:bg-gray-800">
       <th class="p-2">Name</th>
       <th class="p-2">Data Type</th>
-      <th class="p-2">Max Length</th>
       <th class="p-2">Mandatory</th>
       <th class="p-2">Description</th>
     </tr>
@@ -2572,49 +2663,22 @@ console.log(data);`
     <tr class="border-b border-gray-200 dark:border-gray-700">
       <td class="p-2 font-medium">Content-Type</td>
       <td class="p-2">String</td>
-      <td class="p-2">36</td>
       <td class="p-2">Yes</td>
       <td class="p-2">application/json</td>
     </tr>
     <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">sender</td>
-      <td class="p-2">String</td>
-      <td class="p-2">60</td>
-      <td class="p-2">Yes</td>
-      <td class="p-2">Agent / Partner name</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">channel</td>
-      <td class="p-2">String</td>
-      <td class="p-2">30</td>
-      <td class="p-2">Yes</td>
-      <td class="p-2">Ripple / Direct</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">company</td>
-      <td class="p-2">String</td>
-      <td class="p-2">6</td>
-      <td class="p-2">Yes</td>
-      <td class="p-2">Will be shared</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">branch</td>
-      <td class="p-2">String</td>
-      <td class="p-2">6</td>
-      <td class="p-2">Yes</td>
-      <td class="p-2">Will be shared</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
       <td class="p-2 font-medium">Authorization</td>
       <td class="p-2">String</td>
-      <td class="p-2">600</td>
       <td class="p-2">Yes</td>
-      <td class="p-2">Bearer token</td>
+      <td class="p-2">Bearer Token</td>
     </tr>
   </tbody>
 </table>
 
-<h5>Request Parameters</h5>
+<h5>Payload</h5>
+<p>None</p>
+
+<h5>Parameters</h5>
 <table class="w-full text-sm">
   <thead>
     <tr class="text-left bg-gray-100 dark:bg-gray-800">
@@ -2627,39 +2691,158 @@ console.log(data);`
   </thead>
   <tbody>
     <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">bank_id</td>
+      <td class="p-2 font-medium">correspondent</td>
       <td class="p-2">String</td>
-      <td class="p-2">10</td>
-      <td class="p-2">Yes</td>
-      <td class="p-2">Unique bank identifier</td>
+      <td class="p-2">2</td>
+      <td class="p-2">No</td>
+      <td class="p-2">Correspondent</td>
     </tr>
     <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">branch_id</td>
+      <td class="p-2 font-medium">receiving_country_code</td>
       <td class="p-2">String</td>
-      <td class="p-2">10</td>
+      <td class="p-2">2</td>
       <td class="p-2">Yes</td>
-      <td class="p-2">Unique branch identifier</td>
+      <td class="p-2">Receiving country code</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">receiving_mode</td>
+      <td class="p-2">String</td>
+      <td class="p-2">-</td>
+      <td class="p-2">No</td>
+      <td class="p-2">Receiving mode</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">iso_code</td>
+      <td class="p-2">String</td>
+      <td class="p-2">-</td>
+      <td class="p-2">Conditional</td>
+      <td class="p-2">Iso code [iso_code, routing_code, sort_code either one required]</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">routing_code</td>
+      <td class="p-2">String</td>
+      <td class="p-2">-</td>
+      <td class="p-2">Conditional</td>
+      <td class="p-2">Routing code [iso_code, routing_code, sort_code either one required]</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">sort_code</td>
+      <td class="p-2">String</td>
+      <td class="p-2">-</td>
+      <td class="p-2">Conditional</td>
+      <td class="p-2">Sort code [iso_code, routing_code, sort_code either one required]</td>
     </tr>
     <tr class="border-b border-gray-200 dark:border-gray-700">
       <td class="p-2 font-medium">account_number</td>
       <td class="p-2">String</td>
-      <td class="p-2">20</td>
-      <td class="p-2">Yes</td>
-      <td class="p-2">Bank account number</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">account_type</td>
-      <td class="p-2">String</td>
-      <td class="p-2">10</td>
+      <td class="p-2">34</td>
       <td class="p-2">No</td>
-      <td class="p-2">SAVINGS, CHECKING, etc.</td>
+      <td class="p-2">Account number</td>
     </tr>
     <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">country_code</td>
+      <td class="p-2 font-medium">iban</td>
       <td class="p-2">String</td>
-      <td class="p-2">2</td>
+      <td class="p-2">34</td>
+      <td class="p-2">No</td>
+      <td class="p-2">iban</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">bank_id</td>
+      <td class="p-2">String</td>
+      <td class="p-2">100</td>
+      <td class="p-2">No</td>
+      <td class="p-2">Internal Id of bank</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">branch_id</td>
+      <td class="p-2">String</td>
+      <td class="p-2">100</td>
+      <td class="p-2">No</td>
+      <td class="p-2">Internal Id of branch</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">receiver_first_name</td>
+      <td class="p-2">String</td>
+      <td class="p-2">60</td>
+      <td class="p-2">No</td>
+      <td class="p-2">first name. Mandatory only for C2C and B2C.</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">receiver_middle_name</td>
+      <td class="p-2">String</td>
+      <td class="p-2">60</td>
+      <td class="p-2">No</td>
+      <td class="p-2">middle name</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">receiver_last_name</td>
+      <td class="p-2">String</td>
+      <td class="p-2">60</td>
+      <td class="p-2">No</td>
+      <td class="p-2">last name. Mandatory only for C2C and B2C.</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">receiver_name</td>
+      <td class="p-2">String</td>
+      <td class="p-2">175</td>
+      <td class="p-2">Conditional</td>
+      <td class="p-2">Mandatory only for C2B and B2B.</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">service_type</td>
+      <td class="p-2">String</td>
+      <td class="p-2">-</td>
+      <td class="p-2">Conditional</td>
+      <td class="p-2">C2C, B2C, C2B and B2B.</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">purpose_of_txn</td>
+      <td class="p-2">String</td>
+      <td class="p-2">-</td>
+      <td class="p-2">No</td>
+      <td class="p-2">Purpose of the transaction</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">sending_currency_code</td>
+      <td class="p-2">String</td>
+      <td class="p-2">3</td>
+      <td class="p-2">No</td>
+      <td class="p-2">Send currency; ISO 3 Char currency code</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">receiving_currency_code</td>
+      <td class="p-2">String</td>
+      <td class="p-2">3</td>
       <td class="p-2">Yes</td>
-      <td class="p-2">ISO 2-character country code</td>
+      <td class="p-2">Beneficiary receive currency; ISO 3 Char currency code</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">sender_first_name</td>
+      <td class="p-2">String</td>
+      <td class="p-2">60</td>
+      <td class="p-2">No</td>
+      <td class="p-2">sender first name</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">sender_middle_name</td>
+      <td class="p-2">String</td>
+      <td class="p-2">60</td>
+      <td class="p-2">No</td>
+      <td class="p-2">sender middle name</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">sender_last_name</td>
+      <td class="p-2">String</td>
+      <td class="p-2">60</td>
+      <td class="p-2">No</td>
+      <td class="p-2">sender last name</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">sender_name</td>
+      <td class="p-2">String</td>
+      <td class="p-2">175</td>
+      <td class="p-2">No</td>
+      <td class="p-2">sender name. Mandatory only for C2B and B2B.</td>
     </tr>
   </tbody>
 </table>
@@ -2670,6 +2853,8 @@ console.log(data);`
     <tr class="text-left bg-gray-100 dark:bg-gray-800">
       <th class="p-2">Name</th>
       <th class="p-2">Data Type</th>
+      <th class="p-2">Max Length</th>
+      <th class="p-2">Mandatory</th>
       <th class="p-2">Description</th>
     </tr>
   </thead>
@@ -2677,112 +2862,97 @@ console.log(data);`
     <tr class="border-b border-gray-200 dark:border-gray-700">
       <td class="p-2 font-medium">status</td>
       <td class="p-2">String</td>
-      <td class="p-2">Success or failure status</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">status_code</td>
-      <td class="p-2">String</td>
-      <td class="p-2">HTTP status code</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">status_message</td>
-      <td class="p-2">String</td>
+      <td class="p-2">60</td>
+      <td class="p-2">Yes</td>
       <td class="p-2">Status description</td>
     </tr>
     <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">data.is_valid</td>
-      <td class="p-2">Boolean</td>
-      <td class="p-2">Whether the account is valid</td>
+      <td class="p-2 font-medium">status_code</td>
+      <td class="p-2">Integer</td>
+      <td class="p-2">-</td>
+      <td class="p-2">Yes</td>
+      <td class="p-2">Status code</td>
     </tr>
     <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">data.account_holder_name</td>
+      <td class="p-2 font-medium">data</td>
       <td class="p-2">String</td>
-      <td class="p-2">Name of the account holder</td>
+      <td class="p-2">-</td>
+      <td class="p-2">Yes</td>
+      <td class="p-2">Eg value "Validation successful"</td>
     </tr>
     <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">data.account_status</td>
+      <td class="p-2 font-medium">message</td>
       <td class="p-2">String</td>
-      <td class="p-2">ACTIVE, INACTIVE, BLOCKED, etc.</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">data.validation_reference</td>
-      <td class="p-2">String</td>
-      <td class="p-2">Reference ID for the validation</td>
+      <td class="p-2">-</td>
+      <td class="p-2">No</td>
+      <td class="p-2">Eg Value : Bank account number length is not acceptable. Allowed length is any0f:14,15,16</td>
     </tr>
     <tr class="border-b border-gray-200 dark:border-gray-700">
       <td class="p-2 font-medium">error_code</td>
-      <td class="p-2">String</td>
-      <td class="p-2">Error code (for error responses)</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">error_message</td>
-      <td class="p-2">String</td>
-      <td class="p-2">Error description (for error responses)</td>
+      <td class="p-2">Integer</td>
+      <td class="p-2">-</td>
+      <td class="p-2">No</td>
+      <td class="p-2">Error code value</td>
     </tr>
   </tbody>
 </table>
-
-<h5>Error Handling</h5>
-<ul>
-  <li>400 Bad Request: Invalid account details or missing required parameters</li>
-  <li>401 Unauthorized: Invalid or expired token</li>
-  <li>403 Forbidden: Insufficient permissions</li>
-  <li>404 Not Found: Bank or branch not found</li>
-  <li>500 Internal Server Error: System error</li>
-</ul>
-
-<h5>Best Practices</h5>
-<ul>
-  <li>Validate accounts before initiating transactions to reduce failed transactions</li>
-  <li>Display validation errors to users in a user-friendly manner</li>
-  <li>Store the validation reference for future reference</li>
-  <li>Implement proper error handling for validation failures</li>
-</ul>
 `
         },
         {
           id: 'get-agent-credit-balance',
           title: 'Get Agent Credit Balance',
           method: 'GET',
-          path: '/raas/masters/v1/agent/credit-balance',
-          description: 'Retrieve agent credit balance information',
+          path: '/raas/masters/v1/accounts/balance',
+          description: 'Fetches the agent credit balance.',
           requestHeaders: {
             'Content-Type': 'application/json',
-            'sender': 'testagentae',
-            'channel': 'Direct',
-            'company': '784825',
-            'branch': '784826',
             'Authorization': 'Bearer {{access_token}}'
           },
+          queryParams: [
+            {
+              name: 'payment_mode',
+              description: 'AP, BT, LE, CO etc.',
+              required: false
+            }
+          ],
           codeExamples: [
             {
               language: 'curl',
               label: 'cURL',
-              code: `curl -X GET "https://drap-sandbox.digitnine.com/raas/masters/v1/agent/credit-balance" \\
+              code: `curl -X GET "https://drap-sandbox.digitnine.com/raas/masters/v1/accounts/balance?payment_mode=AP" \\
 -H "Content-Type: application/json" \\
--H "sender: testagentae" \\
--H "channel: Direct" \\
--H "company: 784825" \\
--H "branch: 784826" \\
 -H "Authorization: Bearer {{access_token}}"`
             },
             {
               language: 'javascript',
               label: 'JavaScript',
-              code: `const response = await fetch('http://localhost:3001/api/raas/masters/v1/agent/credit-balance', {
+              code: `const response = await fetch('https://drap-sandbox.digitnine.com/raas/masters/v1/accounts/balance?payment_mode=AP', {
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
-    'sender': 'testagentae',
-    'channel': 'Direct',
-    'company': '784825',
-    'branch': '784826',
     'Authorization': 'Bearer ' + accessToken
   }
 });
 
 const data = await response.json();
 console.log(data);`
+            },
+            {
+              language: 'python',
+              label: 'Python',
+              code: `import requests
+
+url = "https://drap-sandbox.digitnine.com/raas/masters/v1/accounts/balance"
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + access_token
+}
+params = {
+    "payment_mode": "AP"
+}
+
+response = requests.get(url, headers=headers, params=params)
+print(response.json())`
             }
           ],
           responses: [{
@@ -2790,25 +2960,49 @@ console.log(data);`
             description: 'Successful operation',
             example: {
               status: 'success',
-              status_code: '200',
-              status_message: 'Success',
-              data: {
-                agent_id: 'testagentae',
-                credit_balance: 50000.00,
-                currency_code: 'AED',
-                last_updated: '2023-11-01T12:30:45Z'
-              }
+              status_code: 200,
+              data: [
+                {
+                  closingBalance: 103151529,
+                  currency: 'AED'
+                }
+              ]
             }
           }],
           guidelines: `
-<h5>API Rules</h5>
-<ul>
-  <li>This endpoint returns the current credit balance for the authenticated agent</li>
-  <li>The credit balance is in the agent's base currency</li>
-  <li>The last_updated field indicates when the balance was last updated</li>
-</ul>
+<h5>Overview</h5>
+<p>Fetches the agent credit balance.</p>
 
 <h5>Required Headers</h5>
+<table class="w-full text-sm">
+  <thead>
+    <tr class="text-left bg-gray-100 dark:bg-gray-800">
+      <th class="p-2">Name</th>
+      <th class="p-2">Data Type</th>
+      <th class="p-2">Mandatory</th>
+      <th class="p-2">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">Content-Type</td>
+      <td class="p-2">String</td>
+      <td class="p-2">Yes</td>
+      <td class="p-2">application/json</td>
+    </tr>
+    <tr class="border-b border-gray-200 dark:border-gray-700">
+      <td class="p-2 font-medium">Authorization</td>
+      <td class="p-2">String</td>
+      <td class="p-2">Yes</td>
+      <td class="p-2">Bearer Token</td>
+    </tr>
+  </tbody>
+</table>
+
+<h5>Payload</h5>
+<p>None</p>
+
+<h5>Parameters</h5>
 <table class="w-full text-sm">
   <thead>
     <tr class="text-left bg-gray-100 dark:bg-gray-800">
@@ -2821,46 +3015,11 @@ console.log(data);`
   </thead>
   <tbody>
     <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">Content-Type</td>
+      <td class="p-2 font-medium">payment_mode</td>
       <td class="p-2">String</td>
-      <td class="p-2">36</td>
-      <td class="p-2">Yes</td>
-      <td class="p-2">application/json</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">sender</td>
-      <td class="p-2">String</td>
-      <td class="p-2">60</td>
-      <td class="p-2">Yes</td>
-      <td class="p-2">Agent / Partner name</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">channel</td>
-      <td class="p-2">String</td>
-      <td class="p-2">30</td>
-      <td class="p-2">Yes</td>
-      <td class="p-2">Ripple / Direct</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">company</td>
-      <td class="p-2">String</td>
-      <td class="p-2">6</td>
-      <td class="p-2">Yes</td>
-      <td class="p-2">Will be shared</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">branch</td>
-      <td class="p-2">String</td>
-      <td class="p-2">6</td>
-      <td class="p-2">Yes</td>
-      <td class="p-2">Will be shared</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">Authorization</td>
-      <td class="p-2">String</td>
-      <td class="p-2">600</td>
-      <td class="p-2">Yes</td>
-      <td class="p-2">Bearer token</td>
+      <td class="p-2">2</td>
+      <td class="p-2">Conditional</td>
+      <td class="p-2">AP, BT, LE, CO etc.</td>
     </tr>
   </tbody>
 </table>
@@ -2871,6 +3030,8 @@ console.log(data);`
     <tr class="text-left bg-gray-100 dark:bg-gray-800">
       <th class="p-2">Name</th>
       <th class="p-2">Data Type</th>
+      <th class="p-2">Max Length</th>
+      <th class="p-2">Mandatory</th>
       <th class="p-2">Description</th>
     </tr>
   </thead>
@@ -2878,56 +3039,40 @@ console.log(data);`
     <tr class="border-b border-gray-200 dark:border-gray-700">
       <td class="p-2 font-medium">status</td>
       <td class="p-2">String</td>
-      <td class="p-2">Success or failure status</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">status_code</td>
-      <td class="p-2">String</td>
-      <td class="p-2">HTTP status code</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">status_message</td>
-      <td class="p-2">String</td>
+      <td class="p-2">60</td>
+      <td class="p-2">Yes</td>
       <td class="p-2">Status description</td>
     </tr>
     <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">data.agent_id</td>
-      <td class="p-2">String</td>
-      <td class="p-2">Agent identifier</td>
+      <td class="p-2 font-medium">status_code</td>
+      <td class="p-2">Integer</td>
+      <td class="p-2">-</td>
+      <td class="p-2">Yes</td>
+      <td class="p-2">Status code</td>
     </tr>
     <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">data.credit_balance</td>
-      <td class="p-2">BigDecimal</td>
-      <td class="p-2">Current credit balance</td>
+      <td class="p-2 font-medium">data</td>
+      <td class="p-2">Object Array</td>
+      <td class="p-2">-</td>
+      <td class="p-2">Yes</td>
+      <td class="p-2"></td>
     </tr>
     <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">data.currency_code</td>
-      <td class="p-2">String</td>
-      <td class="p-2">ISO 3-character currency code</td>
+      <td class="p-2 font-medium">data[].closingBalance</td>
+      <td class="p-2">Integer</td>
+      <td class="p-2">-</td>
+      <td class="p-2">Yes</td>
+      <td class="p-2">Closing Balance</td>
     </tr>
     <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">data.last_updated</td>
+      <td class="p-2 font-medium">data[].currency</td>
       <td class="p-2">String</td>
-      <td class="p-2">Timestamp of last balance update</td>
+      <td class="p-2">3</td>
+      <td class="p-2">Yes</td>
+      <td class="p-2">Currency code</td>
     </tr>
   </tbody>
 </table>
-
-<h5>Error Handling</h5>
-<ul>
-  <li>401 Unauthorized: Invalid or expired token</li>
-  <li>403 Forbidden: Insufficient permissions</li>
-  <li>404 Not Found: Agent not found</li>
-  <li>500 Internal Server Error: System error</li>
-</ul>
-
-<h5>Best Practices</h5>
-<ul>
-  <li>Check the credit balance before initiating transactions to ensure sufficient funds</li>
-  <li>Display the credit balance in your UI for better user experience</li>
-  <li>Implement proper error handling for balance retrieval failures</li>
-  <li>Consider implementing automatic balance refresh after transactions</li>
-</ul>
 `
         }
       ]
@@ -4781,89 +4926,109 @@ print_r($data);
 `
         },
         {
-          id: 'transaction-status-update',
-          title: 'Transaction Status Update',
-          method: 'PUT',
-          path: '/amr/ras/api/v1_0/ras/transaction-status',
-          description: 'Update the status of a transaction',
+          id: 'transaction-status-callback',
+          title: 'Transaction Status Callback',
+          method: 'POST',
+          path: '<<PARTNER_ENDPOINT_WITH_CONTEXT>>',
+          description: 'Callback API that should be called to push the status of a transaction. It will be hosted by the Partner.',
           errorCodes: ``,
           requestHeaders: {
             'Content-Type': 'application/json',
-            'sender': 'testagentae',
-            'channel': 'Direct',
-            'company': '784825',
-            'branch': '784826',
-            'Authorization': 'Bearer {{access_token}}'
+            'hash': '<<hash value>>'
           },
           requestBody: `{
-  "transaction_ref_number": "T987654321",
-  "status": "PAID_OUT",
-  "status_reason": "Funds disbursed to beneficiary",
-  "payout_date": "2023-11-01T15:45:30Z",
-  "additional_info": {
-    "payout_method": "Cash",
-    "payout_location": "Branch 123",
-    "agent_id": "AG456789"
-  }
+  "transaction_ref_number": "5712122130661730",
+  "state": "COMPLETED",
+  "sub_state": "CREDITED"
 }`,
           codeExamples: [
             {
               language: 'curl',
               label: 'cURL',
-              code: `curl -X PUT "https://drap-sandbox.digitnine.com/amr/ras/api/v1_0/ras/transaction-status" \\
+              code: `curl -X POST "https://your-partner-domain.com/api/transaction-status-callback" \\
 -H "Content-Type: application/json" \\
--H "sender: testagentae" \\
--H "channel: Direct" \\
--H "company: 784825" \\
--H "branch: 784826" \\
--H "Authorization: Bearer {{access_token}}" \\
+-H "hash: <<SHA512_hash_value>>" \\
 -d '{
-  "transaction_ref_number": "T987654321",
-  "status": "PAID_OUT",
-  "status_reason": "Funds disbursed to beneficiary",
-  "payout_date": "2023-11-01T15:45:30Z",
-  "additional_info": {
-    "payout_method": "Cash",
-    "payout_location": "Branch 123",
-    "agent_id": "AG456789"
-  }
+  "transaction_ref_number": "5712122130661730",
+  "state": "COMPLETED",
+  "sub_state": "CREDITED"
 }'`
+            },
+            {
+              language: 'javascript',
+              label: 'JavaScript',
+              code: `const crypto = require('crypto');
+
+// Compute hash: SHA512(payload + secret)
+const payload = JSON.stringify({
+  transaction_ref_number: "5712122130661730",
+  state: "COMPLETED",
+  sub_state: "CREDITED"
+});
+const secret = "your-pre-shared-secret";
+const hash = crypto.createHash('sha512').update(payload + secret).digest('hex');
+
+const response = await fetch('https://your-partner-domain.com/api/transaction-status-callback', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'hash': hash
+  },
+  body: payload
+});
+
+const data = await response.json();
+console.log(data);`
+            },
+            {
+              language: 'python',
+              label: 'Python',
+              code: `import requests
+import json
+import hashlib
+
+# Compute hash: SHA512(payload + secret)
+payload = {
+    "transaction_ref_number": "5712122130661730",
+    "state": "COMPLETED",
+    "sub_state": "CREDITED"
+}
+payload_str = json.dumps(payload)
+secret = "your-pre-shared-secret"
+hash_value = hashlib.sha512((payload_str + secret).encode()).hexdigest()
+
+url = "https://your-partner-domain.com/api/transaction-status-callback"
+headers = {
+    "Content-Type": "application/json",
+    "hash": hash_value
+}
+
+response = requests.post(url, headers=headers, json=payload)
+print(response.json())`
             }
           ],
           responses: [{
             status: 200,
             description: 'Successful operation',
             example: {
-              status: 'success',
-              status_code: '200',
-              status_message: 'Transaction status updated successfully',
-              data: {
-                transaction_ref_number: 'T987654321',
-                previous_status: 'EXECUTED',
-                current_status: 'PAID_OUT',
-                update_timestamp: '2023-11-01T15:45:35Z'
-              }
-            }
-          },
-          {
-            status: 400,
-            description: 'Bad request',
-            example: {
-              status: 'error',
-              status_code: '400',
-              status_message: 'Invalid status transition',
-              error_code: '40010',
-              error_message: 'Cannot transition from INITIATED to PAID_OUT'
+              state: 'ACKNOWLEDGED'
             }
           }],
           guidelines: `
-<h5>Status Update Rules</h5>
+<h5>Overview</h5>
+<p>This is a callback API that should be called to push the status of a transaction. It will be hosted by the Partner.</p>
+
+<h5>Integrity Validation</h5>
+<p>For integrity validation, a pre-shared secret is used to compute a payload hash.</p>
 <ul>
-  <li>Only certain status transitions are allowed based on the current transaction state</li>
-  <li>A valid reason must be provided for the status update</li>
-  <li>Only authorized users can update transaction statuses</li>
-  <li>All status updates are logged for audit purposes</li>
+  <li><strong>Hash Computation:</strong> When calling the API, the hash is computed by concatenating the pre-shared secret at the end of the request payload.</li>
+  <li><strong>Example:</strong> <code>SHA512-hashof({"transaction_ref_number":"5712122130661730","state":"COMPLETED", "sub_state":"CREDITED"}<<secret>>)</code></li>
+  <li><strong>Hash Header:</strong> The computed hash value must be attached in a header named "hash".</li>
+  <li><strong>Partner Validation:</strong> Upon receiving the callback, the Partner will compute the hash using the incoming request payload and the secret, then compare it with the value in the "hash" header. The request is considered valid only if both values match.</li>
 </ul>
+
+<h5>IP Whitelisting</h5>
+<p>The IP address <strong>20.207.110.226</strong> needs to be whitelisted from the partner's end.</p>
 
 <h5>Required Headers</h5>
 <table class="w-full text-sm">
@@ -4871,6 +5036,7 @@ print_r($data);
     <tr class="text-left bg-gray-100 dark:bg-gray-800">
       <th class="p-2">Name</th>
       <th class="p-2">Data Type</th>
+      <th class="p-2">Max Length</th>
       <th class="p-2">Mandatory</th>
       <th class="p-2">Description</th>
     </tr>
@@ -4879,36 +5045,27 @@ print_r($data);
     <tr class="border-b border-gray-200 dark:border-gray-700">
       <td class="p-2 font-medium">Content-Type</td>
       <td class="p-2">String</td>
+      <td class="p-2">-</td>
       <td class="p-2">Yes</td>
       <td class="p-2">application/json</td>
     </tr>
     <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">sender</td>
+      <td class="p-2 font-medium">hash</td>
       <td class="p-2">String</td>
-      <td class="p-2">Yes</td>
-      <td class="p-2">Agent/Partner name</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">channel</td>
-      <td class="p-2">String</td>
-      <td class="p-2">Yes</td>
-      <td class="p-2">Direct</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">Authorization</td>
-      <td class="p-2">String</td>
-      <td class="p-2">Yes</td>
-      <td class="p-2">Bearer token</td>
+      <td class="p-2">128</td>
+      <td class="p-2">No</td>
+      <td class="p-2">SHA512 hash in hexadecimal</td>
     </tr>
   </tbody>
 </table>
 
-<h5>Request Body Parameters</h5>
+<h5>Payload Parameters</h5>
 <table class="w-full text-sm">
   <thead>
     <tr class="text-left bg-gray-100 dark:bg-gray-800">
       <th class="p-2">Name</th>
       <th class="p-2">Data Type</th>
+      <th class="p-2">Max Length</th>
       <th class="p-2">Mandatory</th>
       <th class="p-2">Description</th>
     </tr>
@@ -4917,59 +5074,69 @@ print_r($data);
     <tr class="border-b border-gray-200 dark:border-gray-700">
       <td class="p-2 font-medium">transaction_ref_number</td>
       <td class="p-2">String</td>
+      <td class="p-2">16</td>
       <td class="p-2">Yes</td>
-      <td class="p-2">Transaction reference number</td>
+      <td class="p-2">Transaction reference number. Unique number to identify the transaction.</td>
     </tr>
     <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">status</td>
+      <td class="p-2 font-medium">state</td>
       <td class="p-2">String</td>
+      <td class="p-2">60</td>
       <td class="p-2">Yes</td>
-      <td class="p-2">New status (PAID_OUT, COMPLETED, etc.)</td>
+      <td class="p-2">Status code</td>
     </tr>
     <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">status_reason</td>
+      <td class="p-2 font-medium">sub_state</td>
       <td class="p-2">String</td>
+      <td class="p-2">120</td>
       <td class="p-2">Yes</td>
-      <td class="p-2">Reason for status update</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">payout_date</td>
-      <td class="p-2">String (ISO 8601)</td>
-      <td class="p-2">No</td>
-      <td class="p-2">Date and time of payout (required for PAID_OUT status)</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">additional_info</td>
-      <td class="p-2">Object</td>
-      <td class="p-2">No</td>
-      <td class="p-2">Additional information related to the status update</td>
+      <td class="p-2">Sub state code</td>
     </tr>
   </tbody>
 </table>
 
-<h5>Valid Status Transitions</h5>
+<h5>Response Parameters</h5>
 <table class="w-full text-sm">
   <thead>
     <tr class="text-left bg-gray-100 dark:bg-gray-800">
-      <th class="p-2">Current Status</th>
-      <th class="p-2">Valid Next Status</th>
+      <th class="p-2">Name</th>
+      <th class="p-2">Data Type</th>
+      <th class="p-2">Max Length</th>
+      <th class="p-2">Mandatory</th>
+      <th class="p-2">Description</th>
     </tr>
   </thead>
   <tbody>
     <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2">EXECUTED</td>
-      <td class="p-2">PAID_OUT, REJECTED</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2">PAID_OUT</td>
-      <td class="p-2">COMPLETED</td>
-    </tr>
-    <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2">REJECTED</td>
-      <td class="p-2">REFUNDED</td>
+      <td class="p-2 font-medium">state</td>
+      <td class="p-2">String</td>
+      <td class="p-2">-</td>
+      <td class="p-2">Yes</td>
+      <td class="p-2">State value should always be "ACKNOWLEDGED".</td>
     </tr>
   </tbody>
 </table>
+
+<h5>How Retry Works</h5>
+<ul>
+  <li><strong>Max Retry Count:</strong> The system will attempt a maximum of 4 retries.</li>
+  <li><strong>Retry Schedule:</strong>
+    <ul>
+      <li>Retry 1: 5 minutes</li>
+      <li>Retry 2: 10 minutes</li>
+      <li>Retry 3: 60 minutes</li>
+      <li>Retry 4: 60 minutes</li>
+    </ul>
+  </li>
+  <li><strong>Retry Activation Conditions:</strong> The retry mechanism is activated if an API call receives a timeout or any HTTP status other than 200 OK.</li>
+  <li><strong>Conditions for Stopping Retries / No Retries:</strong>
+    <ul>
+      <li>Once the maximum retry count (4) is reached for a specific transaction substate, the push will be stopped. In such cases, the latest information should be retrieved from the transaction enquiry API.</li>
+      <li>If a response is "NOT ACKNOWLEDGED" but receives an HTTP status of "SUCCESS (200 OK)", no retry will occur for that transaction status.</li>
+      <li>Transactions with a "NOT ACKNOWLEDGED but received SUCCESS (200 OK)" status will not be processed further; the latest information should be obtained from the transaction enquiry API.</li>
+    </ul>
+  </li>
+</ul>
 `
         },
         {
@@ -5728,33 +5895,67 @@ const customerOnboardingEndpoints: APIEndpoint[] = [
     nestedEndpoints: [
       {
         id: 'access-token-api',
-        title: 'Access Token API (API 1)',
+        title: 'Access Token API',
         method: 'POST',
         path: '/auth/realms/cdp/protocol/openid-connect/token',
         description: 'Obtain access token required for subsequent eKYC APIs.',
-        requestHeaders: { 'Content-Type': 'application/json' },
-        requestBody: `{
-  "grant_type": "password",
-  "scope": "api://3a3f52a1-1b64-4c27-81f0-50a6ca01324d/customer",
-  "client_id": "cdp_app",
-  "client_secret": "mSh18BPiMZeQqFfOvWhgv8wzvnNVbj3Y",
-  "username": "testagentae",
-  "password": "Admin@123"
-}`,
+        requestHeaders: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        requestBody: `grant_type=password&scope=api://3a3f52a1-1b64-4c27-81f0-50a6ca01324d,&client_id=<<client_id>>&client_secret=<<secret>>&username=<<username>>&password=<<password>>`,
         codeExamples: [
           {
             language: 'curl',
             label: 'cURL',
             code: `curl -X POST "https://{{baseUrl}}/auth/realms/cdp/protocol/openid-connect/token" \
--H "Content-Type: application/json" \
--d '{
-  "grant_type": "password",
-  "scope": "api://3a3f52a1-1b64-4c27-81f0-50a6ca01324d/customer",
-  "client_id": "cdp_app",
-  "client_secret": "mSh18BPiMZeQqFfOvWhgv8wzvnNVbj3Y",
-  "username": "testagentae",
-  "password": "Admin@123"
-}'`
+-H "Content-Type: application/x-www-form-urlencoded" \
+--data-urlencode "grant_type=password" \
+--data-urlencode "scope=api://3a3f52a1-1b64-4c27-81f0-50a6ca01324d," \
+--data-urlencode "client_id=<<client_id>>" \
+--data-urlencode "client_secret=<<secret>>" \
+--data-urlencode "username=<<username>>" \
+--data-urlencode "password=<<password>>"`
+          },
+          {
+            language: 'javascript',
+            label: 'JavaScript',
+            code: `const params = new URLSearchParams();
+params.append('grant_type', 'password');
+params.append('scope', 'api://3a3f52a1-1b64-4c27-81f0-50a6ca01324d,');
+params.append('client_id', '<<client_id>>');
+params.append('client_secret', '<<secret>>');
+params.append('username', '<<username>>');
+params.append('password', '<<password>>');
+
+const response = await fetch('https://{{baseUrl}}/auth/realms/cdp/protocol/openid-connect/token', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/x-www-form-urlencoded'
+  },
+  body: params
+});
+
+const data = await response.json();
+console.log(data);`
+          },
+          {
+            language: 'python',
+            label: 'Python',
+            code: `import requests
+
+url = "https://{{baseUrl}}/auth/realms/cdp/protocol/openid-connect/token"
+headers = {
+    "Content-Type": "application/x-www-form-urlencoded"
+}
+data = {
+    "grant_type": "password",
+    "scope": "api://3a3f52a1-1b64-4c27-81f0-50a6ca01324d,",
+    "client_id": "<<client_id>>",
+    "client_secret": "<<secret>>",
+    "username": "<<username>>",
+    "password": "<<password>>"
+}
+
+response = requests.post(url, headers=headers, data=data)
+print(response.json())`
           }
         ],
         responses: [{
@@ -5904,7 +6105,7 @@ const customerOnboardingEndpoints: APIEndpoint[] = [
       },
       {
         id: 'request-ekyc-api',
-        title: 'Request e-KYC (API 2)',
+        title: 'Request e-KYC',
         method: 'POST',
         path: '/ekyc/api/v1/request',
         description: 'Create an e-KYC request and receive e-KYC request id and data.',
@@ -5934,18 +6135,30 @@ const customerOnboardingEndpoints: APIEndpoint[] = [
 }'`
           }
         ],
-        responses: [{
-          status: 200,
-          description: 'Success Response for WEB model',
-          example: {
-            status: 'success',
-            statusCode: 200,
-            data: {
-              ekyc_request_id: '4e41d40a-6f16-4874-977b-017798d1e583',
-              ekyc_request_data: { ekyc_portal_html: '<<encrypted_base_64_html_if_any>>' }
+        responses: [
+          {
+            status: 200,
+            description: 'Success Response for WEB model',
+            example: {
+              status: 'success',
+              statusCode: 200,
+              data: {
+                ekyc_request_id: '4e41d40a-6f16-4874-977b-017798d1e583',
+                ekyc_request_data: { ekyc_portal_html: '<<encrypted_base_64_html_if_any>>' }
+              }
+            }
+          },
+          {
+            status: 400,
+            description: 'Bad Request - Invalid input parameters',
+            example: {
+              status: 'failure',
+              statusCode: 400,
+              errorCode: 400,
+              message: 'Invalid primaryMobileNumber,Invalid emailId'
             }
           }
-        }],
+        ],
         guidelines: `
 <h5>Header</h5>
 <table class="w-full text-sm">
@@ -6021,14 +6234,14 @@ const customerOnboardingEndpoints: APIEndpoint[] = [
       <td class="p-2">String</td>
       <td class="p-2">20</td>
       <td class="p-2"><span class="inline-flex items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">MANDATORY</span></td>
-      <td class="p-2">Customer mobile number</td>
+      <td class="p-2">Customer mobile number. Must be a valid phone number format (e.g., "+971508991879" without spaces or special characters except the leading +). Do not include placeholder brackets like &lt;&lt;&gt;&gt;.</td>
     </tr>
     <tr class="border-b border-gray-200 dark:border-gray-700">
       <td class="p-2 font-medium">email_id</td>
       <td class="p-2">String</td>
       <td class="p-2">100</td>
       <td class="p-2"><span class="inline-flex items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">MANDATORY</span></td>
-      <td class="p-2">Customer email ID</td>
+      <td class="p-2">Customer email ID. Must be a valid, complete email address format (e.g., "customer@example.com"). Do not use masked or truncated email addresses.</td>
     </tr>
   </tbody>
 </table>
@@ -6082,11 +6295,22 @@ const customerOnboardingEndpoints: APIEndpoint[] = [
     </tr>
   </tbody>
 </table>
+
+<h5 class="mt-4">Validation Rules</h5>
+<ul class="list-disc list-inside text-sm text-gray-700 dark:text-gray-300 space-y-2">
+  <li><strong>primary_mobile_number:</strong> Must be a valid phone number. Format should be international format starting with "+" followed by country code and number without spaces (e.g., "+971508991879"). Do not include placeholder brackets like &lt;&lt;&gt;&gt;.</li>
+  <li><strong>email_id:</strong> Must be a valid, complete email address following standard email format (e.g., "user@domain.com"). The email must be fully specified and not masked or truncated.</li>
+</ul>
+
+<h5 class="mt-4">Common Errors</h5>
+<ul class="list-disc list-inside text-sm text-gray-700 dark:text-gray-300 space-y-2">
+  <li><strong>400 Bad Request:</strong> Occurs when <code>primary_mobile_number</code> or <code>email_id</code> format is invalid. Ensure mobile numbers are in international format without spaces, and email addresses are complete and valid.</li>
+</ul>
 `
       },
       {
         id: 'ocr-analyze-api',
-        title: 'OCR Analyze (API 3)',
+        title: 'OCR Analyze',
         method: 'POST',
         path: '/ekyc/api/v1/efr/ocrDetection',
         description: 'OCR Detection API accepts the ID Document front and back and provides the contents of the ID Document.',
@@ -6103,9 +6327,58 @@ const customerOnboardingEndpoints: APIEndpoint[] = [
   "ekycRequestId": "<<ekycRequestId>>",
   "document": "<<id_document_front_base64>>",
   "documentBack": "<<id_document_back_base64>>"
-}'` }
+}'` },
+          {
+            language: 'javascript',
+            label: 'JavaScript',
+            code: `const response = await fetch('https://{{baseUrl}}/ekyc/api/v1/efr/ocrDetection', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    ekycRequestId: '<<ekycRequestId>>',
+    document: '<<id_document_front_base64>>',
+    documentBack: '<<id_document_back_base64>>'
+  })
+});
+
+const data = await response.json();
+console.log(data);`
+          },
+          {
+            language: 'python',
+            label: 'Python',
+            code: `import requests
+
+url = "https://{{baseUrl}}/ekyc/api/v1/efr/ocrDetection"
+headers = {
+    "Content-Type": "application/json"
+}
+payload = {
+    "ekycRequestId": "<<ekycRequestId>>",
+    "document": "<<id_document_front_base64>>",
+    "documentBack": "<<id_document_back_base64>>"
+}
+
+response = requests.post(url, headers=headers, json=payload)
+print(response.json())`
+          }
         ],
-        responses: [{ status: 200, description: 'Success', example: { status: 'success', statusCode: 200, data: { success: true, transactionId: 'ocr_transaction_123' } } }],
+        responses: [
+          { 
+            status: 200, 
+            description: 'Success', 
+            example: { 
+              status: 'success', 
+              statusCode: 200, 
+              data: { 
+                success: true, 
+                transactionId: 'ocr_transaction_123' 
+              } 
+            } 
+          },
+        ],
         guidelines: `
 <h5>Header</h5>
 <table class="w-full text-sm">
@@ -6286,11 +6559,15 @@ const customerOnboardingEndpoints: APIEndpoint[] = [
     </tr>
   </tbody>
 </table>
+
+<h5 class="mt-4">Authentication</h5>
+<p class="text-sm text-gray-700 dark:text-gray-300 mb-2"><strong>Important:</strong> This API does <strong>NOT</strong> require an Authorization header. Do not include the Authorization header in your request, as it may cause a 401 Unauthorized error.</p>
+<p class="text-sm text-gray-700 dark:text-gray-300 mb-2">Only the <code>Content-Type: application/json</code> header is required.</p>
 `
       },
       {
         id: 'face-liveness-api',
-        title: 'Face Liveness (API 4)',
+        title: 'Face Liveness',
         method: 'POST',
         path: '/ekyc/api/v1/efr/faceLiveness',
         description: 'Face Liveness API is used to check the face liveness of the customer.',
@@ -6425,7 +6702,7 @@ const customerOnboardingEndpoints: APIEndpoint[] = [
       },
       {
         id: 'confirm-identity-api',
-        title: 'Confirm Identity (API 5)',
+        title: 'Confirm Identity',
         method: 'POST',
         path: '/ekyc/api/v1/efr/confirmIdentity',
         description: 'Confirm identity by comparing face with document photo.',
@@ -6514,7 +6791,7 @@ const customerOnboardingEndpoints: APIEndpoint[] = [
       },
       {
         id: 'provide-additional-info-api',
-        title: 'Provide Additional Information (API 6)',
+        title: 'Provide Additional Information',
         method: 'POST',
         path: '/ekyc/api/v1/additional-info',
         description: 'Provide additional customer information required for eKYC completion.',
@@ -6576,7 +6853,7 @@ const customerOnboardingEndpoints: APIEndpoint[] = [
       },
       {
         id: 'get-customer-profile-api',
-        title: 'Get Customer Profile (API 7)',
+        title: 'Get Customer Profile',
         method: 'GET',
         path: '/ekyc/api/v1/customer-profile/{ekycRequestId}',
         description: 'Retrieve customer profile information after eKYC completion.',
@@ -6781,10 +7058,49 @@ const customerOnboardingEndpoints: APIEndpoint[] = [
         title: 'Get Customer API v2',
         method: 'GET',
         path: '/caas/api/v2/customer/{ecrn}',
-        description: 'Get customer information by customer number (ecrn).',
-        requestHeaders: { 'Authorization': 'Bearer {{access_token}}' },
+        description: 'API to be used to get the customer information by customer number.',
+        requestHeaders: { 'Content-Type': 'application/json', 'Authorization': 'Bearer {{access_token}}' },
+        requestBody: '',
         pathParams: [{ name: 'ecrn', description: 'CDP customer number (ECRN)', required: true }],
-        codeExamples: [{ language: 'curl', label: 'cURL', code: `curl -X GET "https://{{baseUrl}}/caas/api/v2/customer/{ecrn}" -H "Authorization: Bearer {{access_token}}"` }],
+        codeExamples: [
+          {
+            language: 'curl',
+            label: 'cURL',
+            code: `curl -X GET "https://{{baseUrl}}/caas/api/v2/customer/7841003233051516" \\
+-H "Content-Type: application/json" \\
+-H "Authorization: Bearer {{access_token}}"`
+          },
+          {
+            language: 'javascript',
+            label: 'JavaScript',
+            code: `const ecrn = '7841003233051516'; // Replace with actual ECRN from Customer Lookup API
+const response = await fetch(\`https://{{baseUrl}}/caas/api/v2/customer/\${ecrn}\`, {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer {{access_token}}'
+  }
+});
+
+const data = await response.json();
+console.log(data);`
+          },
+          {
+            language: 'python',
+            label: 'Python',
+            code: `import requests
+
+ecrn = '7841003233051516'  # Replace with actual ECRN from Customer Lookup API
+url = f"https://{{baseUrl}}/caas/api/v2/customer/{ecrn}"
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer {{access_token}}"
+}
+
+response = requests.get(url, headers=headers)
+print(response.json())`
+          }
+        ],
         responses: [{ status: 200, description: 'Success', example: { status: 'success', data: { customer_id: '7841...', status: 'ACTIVE' } } }],
         guidelines: `
 <h5>Header</h5>
@@ -6802,21 +7118,22 @@ const customerOnboardingEndpoints: APIEndpoint[] = [
     <tr class="border-b border-gray-200 dark:border-gray-700">
       <td class="p-2 font-medium">Content-Type</td>
       <td class="p-2">String</td>
-      <td class="p-2">36</td>
+      <td class="p-2">-</td>
       <td class="p-2"><span class="inline-flex items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">MANDATORY</span></td>
-      <td class="p-2">Content type</td>
+      <td class="p-2">Content type (application/json)</td>
     </tr>
     <tr class="border-b border-gray-200 dark:border-gray-700">
-      <td class="p-2 font-medium">Ocp-Apim-Subscription-Key</td>
+      <td class="p-2 font-medium">Authorization</td>
       <td class="p-2">String</td>
-      <td class="p-2">32</td>
+      <td class="p-2">-</td>
       <td class="p-2"><span class="inline-flex items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">MANDATORY</span></td>
-      <td class="p-2">Subscription key</td>
+      <td class="p-2">Bearer Token</td>
     </tr>
   </tbody>
 </table>
 
-<h5 class="mt-4">Parameter</h5>
+<h5 class="mt-4">Path Parameter</h5>
+<p class="text-sm text-gray-700 dark:text-gray-300 mb-2"><strong>Important:</strong> The ECRN (customer number) must be provided as a <strong>path parameter</strong> in the URL, NOT in the request body. This is a GET request, so there is no request body.</p>
 <table class="w-full text-sm">
   <thead>
     <tr class="text-left bg-gray-100 dark:bg-gray-800">
@@ -6833,10 +7150,28 @@ const customerOnboardingEndpoints: APIEndpoint[] = [
       <td class="p-2">String</td>
       <td class="p-2">16</td>
       <td class="p-2"><span class="inline-flex items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">MANDATORY</span></td>
-      <td class="p-2">Customer unique identification number</td>
+      <td class="p-2">Customer unique identification number (ECRN). This value should be obtained from the Customer Lookup API v2 response.</td>
     </tr>
   </tbody>
 </table>
+
+<h5 class="mt-4">Usage Notes</h5>
+<ul class="list-disc list-inside text-sm text-gray-700 dark:text-gray-300 space-y-2">
+  <li>The ECRN is obtained from the <strong>Customer Lookup API v2</strong> response field <code>ecrn</code>.</li>
+  <li><strong>CRITICAL:</strong> Enter the ECRN value in the <strong>Path Parameters</strong> section of the API request form, NOT in the request body.</li>
+  <li>Example: If ECRN is <code>7841003233051516</code>, the URL will be: <code>/caas/api/v2/customer/7841003233051516</code></li>
+  <li>This is a GET request, so there is no request body. The payload is "None".</li>
+  <li>Make sure you copy the exact ECRN value from the Customer Lookup API response - do not add any spaces or extra characters.</li>
+</ul>
+
+<h5 class="mt-4">Troubleshooting "Customer not found" Error</h5>
+<ol class="list-decimal list-inside text-sm text-gray-700 dark:text-gray-300 space-y-2">
+  <li><strong>Verify ECRN is in Path Parameters:</strong> Check that you entered the ECRN in the "Path Parameters" section, NOT in the "Request Body" section.</li>
+  <li><strong>Check ECRN Value:</strong> Ensure you copied the exact ECRN from the Customer Lookup API v2 response. The ECRN should be a 16-digit number (e.g., <code>7841003233051516</code>).</li>
+  <li><strong>Verify URL:</strong> Check the browser console to see the actual URL being called. It should be: <code>/api/caas/api/v2/customer/&lt;your_ecrn&gt;</code></li>
+  <li><strong>Check Authorization:</strong> Ensure you have a valid access token. The Authorization header should be present in the request.</li>
+  <li><strong>Verify Customer Exists:</strong> The customer might not exist in the system. Try using the Customer Lookup API v2 again to verify the ECRN is correct.</li>
+</ol>
 
 <h5 class="mt-4">Response</h5>
 <table class="w-full text-sm">
@@ -7042,6 +7377,15 @@ const APIReferencePage = ({ theme }: APIReferencePageProps) => {
   const handleTryIt = async (endpoint: APIEndpoint, requestBody: string, headers: Record<string, string>, queryParams?: Record<string, string>, pathParams?: Record<string, string>) => {
     let timeoutId: NodeJS.Timeout | undefined;
     
+    console.log('🟢 handleTryIt: Function called with parameters:');
+    console.log('  - endpoint:', endpoint.title);
+    console.log('  - requestBody:', requestBody);
+    console.log('  - headers:', headers);
+    console.log('  - queryParams:', queryParams);
+    console.log('  - pathParams:', pathParams);
+    console.log('  - pathParams type:', typeof pathParams);
+    console.log('  - pathParams keys:', pathParams ? Object.keys(pathParams) : 'N/A');
+    
     try {
       // IMPORTANT: We're using the simple HTTP proxy server with automatic authentication
       // The proxy server must be running with: node cors/simple-http-proxy-working.cjs
@@ -7053,19 +7397,57 @@ const APIReferencePage = ({ theme }: APIReferencePageProps) => {
       let url = `${baseUrl}${endpoint.path}`;
       
       // Replace path parameters if provided
+      console.log('🔍 Debug: Checking path parameters');
+      console.log('  - pathParams:', pathParams);
+      console.log('  - pathParams type:', typeof pathParams);
+      console.log('  - pathParams is null/undefined:', pathParams == null);
+      console.log('  - pathParams keys:', pathParams ? Object.keys(pathParams) : 'N/A');
+      console.log('  - pathParams length:', pathParams ? Object.keys(pathParams).length : 0);
+      
       if (pathParams && Object.keys(pathParams).length > 0) {
+        console.log('✅ Path parameters found, processing...');
         console.log('🔍 Debug: Path parameters received:', pathParams);
         Object.entries(pathParams).forEach(([key, value]) => {
-          console.log(`🔍 Debug: Replacing path param ${key} = ${value}`);
+          console.log(`🔍 Debug: Processing path param ${key} = ${value} (type: ${typeof value})`);
           const placeholder = `{${key}}`;
           if (url.includes(placeholder)) {
-            url = url.replace(placeholder, value || '');
-            console.log(`✅ Replaced path param: ${placeholder} -> ${value || ''}`);
+            if (!value || (typeof value === 'string' && value.trim() === '')) {
+              console.error(`❌ Path parameter ${key} is empty or missing!`);
+              throw new Error(`Path parameter '${key}' is required but was not provided. Please enter a value in the Path Parameters section.`);
+            }
+            const valueToUse = typeof value === 'string' ? value.trim() : String(value);
+            url = url.replace(placeholder, encodeURIComponent(valueToUse));
+            console.log(`✅ Replaced path param: ${placeholder} -> ${valueToUse}`);
           } else {
             console.log(`⚠️ Path parameter placeholder ${placeholder} not found in URL`);
           }
         });
         console.log(`🔗 URL after path param replacement: ${url}`);
+      } else if (endpoint.path.includes('{ecrn}') || endpoint.path.includes('{customer_id}')) {
+        // Special validation for Get Customer API v2
+        console.error('❌ ECRN path parameter is missing!');
+        console.error('❌ Endpoint path:', endpoint.path);
+        console.error('❌ Path params provided:', pathParams);
+        return JSON.stringify({
+          status: 'error',
+          message: 'ECRN is required',
+          error: 'Path parameter \'ecrn\' is missing',
+          suggestion: 'Please enter the ECRN value in the Path Parameters section. The ECRN should be obtained from the Customer Lookup API v2 response.',
+          note: 'ECRN must be provided as a path parameter in the URL, NOT in the request body.',
+          debug: {
+            endpoint_path: endpoint.path,
+            path_params_received: pathParams
+          }
+        }, null, 2);
+      }
+      
+      // Special logging for Get Customer API v2
+      if (endpoint.path.includes('/caas/api/v2/customer/')) {
+        console.log('🎯 Get Customer API v2 Debug:');
+        console.log('  - Original endpoint path:', endpoint.path);
+        console.log('  - Path parameters:', pathParams);
+        console.log('  - Final URL:', url);
+        console.log('  - ECRN value:', pathParams?.ecrn || 'NOT PROVIDED');
       }
       
       // Add query parameters if provided
@@ -7176,13 +7558,20 @@ const APIReferencePage = ({ theme }: APIReferencePageProps) => {
       
       // Prepare headers
       const requestHeaders = new Headers();
-      Object.entries(headers).forEach(([key, value]) => {
-        // Include ALL headers including Authorization
+      const isOcrAnalyzeApi = endpoint.path.includes('/ekyc/api/v1/efr/ocrDetection');
+      
+      // Remove Authorization header for OCR Analyze API since it doesn't require auth
+      const headersToAdd = isOcrAnalyzeApi 
+        ? Object.fromEntries(Object.entries(headers).filter(([key]) => key.toLowerCase() !== 'authorization'))
+        : headers;
+      
+      Object.entries(headersToAdd).forEach(([key, value]) => {
+        // Include headers (Authorization excluded for OCR Analyze API)
         requestHeaders.append(key, value);
       });
       
-      // Add Authorization header for non-auth endpoints
-      if (!endpoint.path.includes('/auth/realms/cdp/protocol/openid-connect/token')) {
+      // Add Authorization header for non-auth endpoints (except OCR Analyze which doesn't require auth)
+      if (!endpoint.path.includes('/auth/realms/cdp/protocol/openid-connect/token') && !isOcrAnalyzeApi) {
         const token = localStorage.getItem('raas_access_token');
         console.log('🔍 Debug: Checking for token in localStorage');
         console.log('🔍 Debug: Token found:', token ? 'YES' : 'NO');
@@ -7627,7 +8016,19 @@ const APIReferencePage = ({ theme }: APIReferencePageProps) => {
                       guidelines={endpoint.guidelines}
                       errorCodes={endpoint.errorCodes}
                       theme={theme}
-                      onTryIt={(editableBody, editableHeaders, editableQueryParams, editablePathParams) => handleTryIt(endpoint, editableBody, editableHeaders, editableQueryParams, editablePathParams)}
+                      onTryIt={async (editableBody, editableHeaders, editableQueryParams, editablePathParams) => {
+                        console.log('🔵 Wrapper: Received from ApiEndpointCard');
+                        console.log('  - editableBody:', editableBody);
+                        console.log('  - editableHeaders:', editableHeaders);
+                        console.log('  - editableQueryParams:', editableQueryParams);
+                        console.log('  - editablePathParams:', editablePathParams);
+                        console.log('  - editablePathParams type:', typeof editablePathParams);
+                        console.log('  - editablePathParams keys:', editablePathParams ? Object.keys(editablePathParams) : 'N/A');
+                        // Ensure pathParams is passed correctly (handle undefined case)
+                        const pathParamsToPass = editablePathParams || {};
+                        console.log('  - pathParamsToPass:', pathParamsToPass);
+                        return await handleTryIt(endpoint, editableBody, editableHeaders, editableQueryParams, pathParamsToPass);
+                      }}
                     />
                   )
                 ))}

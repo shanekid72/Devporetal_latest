@@ -1,7 +1,5 @@
 import { Moon, Sun, Menu, Search, X, ChevronDown, Home } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu as HeadlessMenu, Transition } from '@headlessui/react';
-import { Fragment } from 'react';
 import { Theme } from '../../types';
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
@@ -24,8 +22,12 @@ const Header = ({ theme, onThemeToggle, onMenuClick, showHamburger = true }: Hea
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [integrationHover, setIntegrationHover] = useState(false);
+  const [useCaseHover, setUseCaseHover] = useState(false);
   
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const integrationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const useCaseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -108,6 +110,46 @@ const Header = ({ theme, onThemeToggle, onMenuClick, showHamburger = true }: Hea
     setSearchQuery('');
   };
 
+  // Handle integration dropdown hover with delay
+  const handleIntegrationMouseEnter = () => {
+    if (integrationTimeoutRef.current) {
+      clearTimeout(integrationTimeoutRef.current);
+    }
+    setIntegrationHover(true);
+  };
+
+  const handleIntegrationMouseLeave = () => {
+    integrationTimeoutRef.current = setTimeout(() => {
+      setIntegrationHover(false);
+    }, 250); // 250ms delay
+  };
+
+  // Handle use case dropdown hover with delay
+  const handleUseCaseMouseEnter = () => {
+    if (useCaseTimeoutRef.current) {
+      clearTimeout(useCaseTimeoutRef.current);
+    }
+    setUseCaseHover(true);
+  };
+
+  const handleUseCaseMouseLeave = () => {
+    useCaseTimeoutRef.current = setTimeout(() => {
+      setUseCaseHover(false);
+    }, 250); // 250ms delay
+  };
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (integrationTimeoutRef.current) {
+        clearTimeout(integrationTimeoutRef.current);
+      }
+      if (useCaseTimeoutRef.current) {
+        clearTimeout(useCaseTimeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
     <header className="sticky top-0 z-30 w-full bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 px-6 py-3 glass-surface backdrop-blur-sm shadow-modern">
       <div className="flex items-center justify-between gap-4">
@@ -157,118 +199,106 @@ const Header = ({ theme, onThemeToggle, onMenuClick, showHamburger = true }: Hea
         {location.pathname !== '/' && (
           <div className="hidden lg:flex items-center space-x-1 flex-1 justify-center max-w-3xl">
             {/* Integration Model Dropdown */}
-            <HeadlessMenu as="div" className="relative">
-              {({ open }) => (
-                <>
-                  <HeadlessMenu.Button
-                    className={clsx(
-                      'inline-flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md transition-all duration-200',
-                      isActive('/integration')
-                        ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800',
-                      'interactive-glow'
-                    )}
-                  >
-                    <span>Integration Model</span>
-                    <motion.div
-                      animate={{ rotate: open ? 180 : 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <ChevronDown className="h-4 w-4" />
-                    </motion.div>
-                  </HeadlessMenu.Button>
+            <div 
+              className="relative"
+              onMouseEnter={handleIntegrationMouseEnter}
+              onMouseLeave={handleIntegrationMouseLeave}
+            >
+              <button
+                className={clsx(
+                  'inline-flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md transition-all duration-200',
+                  isActive('/integration')
+                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800',
+                  'interactive-glow'
+                )}
+              >
+                <span>Integration Model</span>
+                <motion.div
+                  animate={{ rotate: integrationHover ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="h-4 w-4" />
+                </motion.div>
+              </button>
 
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
+              <AnimatePresence>
+                {integrationHover && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                    transition={{ duration: 0.1 }}
+                    className="absolute left-0 mt-2 w-48 origin-top-left rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+                    onMouseEnter={handleIntegrationMouseEnter}
+                    onMouseLeave={handleIntegrationMouseLeave}
                   >
-                    <HeadlessMenu.Items className="absolute left-0 mt-2 w-48 origin-top-left rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
-                      <div className="py-1">
-                        {integrationItems.map((item) => (
-                          <HeadlessMenu.Item key={item.path}>
-                            {({ active }) => (
-                              <button
-                                onClick={() => navigate(item.path)}
-                                className={clsx(
-                                  'block w-full text-left px-4 py-2 text-sm transition-colors',
-                                  active
-                                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
-                                    : 'text-gray-700 dark:text-gray-300'
-                                )}
-                              >
-                                {item.label}
-                              </button>
-                            )}
-                          </HeadlessMenu.Item>
-                        ))}
-                      </div>
-                    </HeadlessMenu.Items>
-                  </Transition>
-                </>
-              )}
-            </HeadlessMenu>
+                    <div className="py-1">
+                      {integrationItems.map((item) => (
+                        <button
+                          key={item.path}
+                          onClick={() => navigate(item.path)}
+                          className="block w-full text-left px-4 py-2 text-sm transition-colors text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100"
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
             {/* Use Case Dropdown */}
-            <HeadlessMenu as="div" className="relative">
-              {({ open }) => (
-                <>
-                  <HeadlessMenu.Button
-                    className={clsx(
-                      'inline-flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md transition-all duration-200',
-                      isActive('/use-case')
-                        ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
-                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800',
-                      'interactive-glow'
-                    )}
-                  >
-                    <span>Use Case</span>
-                    <motion.div
-                      animate={{ rotate: open ? 180 : 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <ChevronDown className="h-4 w-4" />
-                    </motion.div>
-                  </HeadlessMenu.Button>
+            <div 
+              className="relative"
+              onMouseEnter={handleUseCaseMouseEnter}
+              onMouseLeave={handleUseCaseMouseLeave}
+            >
+              <button
+                className={clsx(
+                  'inline-flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md transition-all duration-200',
+                  isActive('/use-case')
+                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
+                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800',
+                  'interactive-glow'
+                )}
+              >
+                <span>Use Case</span>
+                <motion.div
+                  animate={{ rotate: useCaseHover ? 180 : 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ChevronDown className="h-4 w-4" />
+                </motion.div>
+              </button>
 
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-100"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
+              <AnimatePresence>
+                {useCaseHover && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                    transition={{ duration: 0.1 }}
+                    className="absolute left-0 mt-2 w-48 origin-top-left rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+                    onMouseEnter={handleUseCaseMouseEnter}
+                    onMouseLeave={handleUseCaseMouseLeave}
                   >
-                    <HeadlessMenu.Items className="absolute left-0 mt-2 w-48 origin-top-left rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
-                      <div className="py-1">
-                        {useCaseItems.map((item) => (
-                          <HeadlessMenu.Item key={item.path}>
-                            {({ active }) => (
-                              <button
-                                onClick={() => navigate(item.path)}
-                                className={clsx(
-                                  'block w-full text-left px-4 py-2 text-sm transition-colors',
-                                  active
-                                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100'
-                                    : 'text-gray-700 dark:text-gray-300'
-                                )}
-                              >
-                                {item.label}
-                              </button>
-                            )}
-                          </HeadlessMenu.Item>
-                        ))}
-                      </div>
-                    </HeadlessMenu.Items>
-                  </Transition>
-                </>
-              )}
-            </HeadlessMenu>
+                    <div className="py-1">
+                      {useCaseItems.map((item) => (
+                        <button
+                          key={item.path}
+                          onClick={() => navigate(item.path)}
+                          className="block w-full text-left px-4 py-2 text-sm transition-colors text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100"
+                        >
+                          {item.label}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
             {/* Direct Links */}
             {directLinks.map((link) => {

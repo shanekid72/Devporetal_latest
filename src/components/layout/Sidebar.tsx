@@ -570,21 +570,27 @@ const Sidebar = ({ onClose }: SidebarProps) => {
         </motion.button>
       </motion.div>
 
-      {/* Model Indicator Badge - only show for RaaS/PaaS, not for Bill Payments */}
-      {!isBillPaymentsRoute && (
-        <motion.div 
-          className="px-4 py-3 border-b border-gray-200 dark:border-gray-800 glass-surface"
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-        >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-700">
-            <span className="text-xs font-semibold text-blue-700 dark:text-blue-300">
-              {selectedPortalType === 'ewa' ? '📍 EWA' : selectedPortalType === 'lfi' ? '📍 LFI' : selectedPortalType === 'wps' ? '📍 WPS' : '📍 White-labelled'}
-            </span>
-          </div>
-        </motion.div>
-      )}
+      {/* Model Indicator Badge */}
+      <motion.div 
+        className="px-4 py-3 border-b border-gray-200 dark:border-gray-800 glass-surface"
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.1 }}
+      >
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-700">
+          <span className="text-xs font-semibold text-blue-700 dark:text-blue-300">
+            {isBillPaymentsRoute 
+              ? 'Bill Payments' 
+              : selectedPortalType === 'ewa' 
+                ? 'EWA' 
+                : selectedPortalType === 'lfi' 
+                  ? 'LFI' 
+                  : selectedPortalType === 'wps' 
+                    ? 'WPS' 
+                    : 'White-labelled'}
+          </span>
+        </div>
+      </motion.div>
 
       {/* Navigation Items */}
       <div className="flex-1 overflow-y-auto">

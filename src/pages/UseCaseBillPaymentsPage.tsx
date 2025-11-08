@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { CreditCard, Zap, Shield, Globe, ArrowRight } from 'lucide-react';
+import { Zap, Shield, Globe, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import ScrollRevealContainer from '../components/ScrollRevealContainer';
 
@@ -15,15 +15,10 @@ const UseCaseBillPaymentsPage = () => {
             transition={{ duration: 0.5 }}
             className="mb-12"
           >
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="w-14 h-14 bg-gradient-to-br from-green-500 to-green-700 rounded-xl flex items-center justify-center shadow-lg">
-                <CreditCard className="h-7 w-7 text-white" />
-              </div>
-              <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white font-display">
-                UPaaS - <span className="text-gradient">Utility Payments as a Service</span>
-              </h1>
-            </div>
-            <p className="text-lg text-gray-600 dark:text-gray-400 font-body max-w-3xl">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+              <span className="text-gradient">Utility Payments as a Service (UPaaS)</span>
+            </h1>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl">
               Comprehensive bill payment solution powered by BBPS (Bharat Bill Payment System) integration. 
               Enable seamless utility bill payments with real-time exchange rates and multi-category support.
             </p>
@@ -36,38 +31,38 @@ const UseCaseBillPaymentsPage = () => {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="grid md:grid-cols-3 gap-6 mb-12"
           >
-            <div className="glass-card p-6 hover:shadow-xl transition-shadow duration-300">
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-blue-400 dark:hover:border-blue-500">
               <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center mb-4">
                 <Zap className="h-6 w-6 text-green-600 dark:text-green-400" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 font-display">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 BBPS Integration
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 font-body">
+              <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300">
                 Direct integration with Bharat Bill Payment System for reliable and secure utility payments across India.
               </p>
             </div>
 
-            <div className="glass-card p-6 hover:shadow-xl transition-shadow duration-300">
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-blue-400 dark:hover:border-blue-500">
               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center mb-4">
                 <Globe className="h-6 w-6 text-blue-600 dark:text-blue-400" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 font-display">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 Real-Time Exchange Rates
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 font-body">
+              <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300">
                 Access live exchange rates for accurate international payment processing and currency conversion.
               </p>
             </div>
 
-            <div className="glass-card p-6 hover:shadow-xl transition-shadow duration-300">
+            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-blue-400 dark:hover:border-blue-500">
               <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center mb-4">
                 <Shield className="h-6 w-6 text-purple-600 dark:text-purple-400" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2 font-display">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
                 Multi-Category Support
               </h3>
-              <p className="text-gray-600 dark:text-gray-400 font-body">
+              <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300">
                 Support for multiple bill categories including electricity, water, gas, telecom, and more.
               </p>
             </div>
@@ -80,19 +75,19 @@ const UseCaseBillPaymentsPage = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
             className="mb-12"
           >
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6 font-display">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-6">
               API Categories
             </h2>
             
             <div className="grid md:grid-cols-2 gap-6">
               {/* Masters APIs */}
-              <Link to="/integration/bill-payments/masters/get-rates" className="glass-card p-8 hover:shadow-2xl transition-all duration-300 group">
+              <Link to="/integration/bill-payments/masters/get-rates" className="bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8 transition-all duration-300 hover:-translate-y-1 hover:border-blue-400 dark:hover:border-blue-500 group">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3 font-display group-hover:text-gradient transition-all">
+                    <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3 group-hover:text-gradient transition-all">
                       Masters APIs
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-400 font-body mb-4">
+                    <p className="text-base leading-relaxed text-gray-600 dark:text-gray-300 mb-4">
                       Access master data including exchange rates, service categories, providers, billers, and biller-specific parameters.
                     </p>
                   </div>
@@ -119,13 +114,13 @@ const UseCaseBillPaymentsPage = () => {
               </Link>
 
               {/* Transaction APIs */}
-              <Link to="/integration/bill-payments/transactions/create-quote" className="glass-card p-8 hover:shadow-2xl transition-all duration-300 group">
+              <Link to="/integration/bill-payments/transactions/create-quote" className="bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8 transition-all duration-300 hover:-translate-y-1 hover:border-blue-400 dark:hover:border-blue-500 group">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3 font-display group-hover:text-gradient transition-all">
+                    <h3 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3 group-hover:text-gradient transition-all">
                       Transaction APIs
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-400 font-body mb-4">
+                    <p className="text-base leading-relaxed text-gray-600 dark:text-gray-300 mb-4">
                       Complete bill payment transaction lifecycle from quote generation to payment confirmation and enquiry.
                     </p>
                   </div>
@@ -158,12 +153,12 @@ const UseCaseBillPaymentsPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="glass-card p-8"
+            className="bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8"
           >
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4 font-display">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4">
               Getting Started
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 font-body mb-6">
+            <p className="text-base leading-relaxed text-gray-600 dark:text-gray-300 mb-6">
               Ready to integrate UPaaS into your application? Start with our comprehensive guides and documentation.
             </p>
             <div className="flex flex-wrap gap-4">

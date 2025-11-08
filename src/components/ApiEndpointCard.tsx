@@ -300,6 +300,30 @@ const ApiEndpointCard: React.FC<ApiEndpointCardProps> = ({
         setEditablePathParams(finalPathParams);
       }
       
+      // Validate ECRN for Get Customer API v2
+      if (title === 'Get Customer API v2') {
+        console.log('🔍 Get Customer API v2: Checking ECRN path parameter');
+        console.log('  - editablePathParams:', editablePathParams);
+        console.log('  - ecrn value:', editablePathParams['ecrn']);
+        if (!editablePathParams['ecrn'] || editablePathParams['ecrn'].trim() === '') {
+          console.error('❌ ECRN is missing or empty!');
+          setTryItResponse(JSON.stringify({
+            status: 'error',
+            message: 'ECRN is required',
+            error: 'Path parameter \'ecrn\' is missing or empty',
+            instruction: 'Please enter the ECRN value in the "Path Parameters" section above, in the "Value" field next to "ecrn".',
+            note: 'The ECRN should be obtained from the Customer Lookup API v2 response field "ecrn".'
+          }, null, 2));
+          setIsLoading(false);
+          setSelectedTab('response');
+          return;
+        }
+        console.log('✅ ECRN found:', editablePathParams['ecrn']);
+        // Ensure finalPathParams includes the ECRN
+        finalPathParams = { ...editablePathParams };
+        console.log('✅ finalPathParams updated:', finalPathParams);
+      }
+      
       // Ensure receiving_country_code is set for Get Branch Master API
       if (title === 'Get Branch Master' && !editableQueryParams['receiving_country_code']) {
         console.log('⚠️ receiving_country_code is missing, setting default value PK');
@@ -308,8 +332,10 @@ const ApiEndpointCard: React.FC<ApiEndpointCardProps> = ({
       }
       
       try {
-        console.log('🔴 ApiEndpointCard: Calling onTryIt with finalQueryParams:', finalQueryParams);
-        console.log('🔴 ApiEndpointCard: Current editableQueryParams state:', editableQueryParams);
+        console.log('🔴 ApiEndpointCard: Calling onTryIt');
+        console.log('🔴 ApiEndpointCard: finalPathParams:', finalPathParams);
+        console.log('🔴 ApiEndpointCard: finalQueryParams:', finalQueryParams);
+        console.log('🔴 ApiEndpointCard: editableHeaders:', editableHeaders);
         const response = await onTryIt(editableRequestBody, editableHeaders, finalQueryParams, finalPathParams);
         setTryItResponse(response);
         // Automatically switch to the response tab after getting the response
@@ -523,6 +549,13 @@ const ApiEndpointCard: React.FC<ApiEndpointCardProps> = ({
                     {pathParams && pathParams.length > 0 && (
                       <div>
                         <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">Path Parameters</h4>
+                        {title === 'Get Customer API v2' && (
+                          <div className="mb-3 p-3 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 rounded-md">
+                            <p className="text-sm text-yellow-800 dark:text-yellow-200">
+                              <strong>⚠️ Important:</strong> Enter the ECRN value in the "Value" field below. The ECRN should be obtained from the <strong>Customer Lookup API v2</strong> response field <code>ecrn</code>. Do NOT put it in the request body (this is a GET request with no body).
+                            </p>
+                          </div>
+                        )}
                         {title === 'Get Branch By Id' && (
                           <div className="mb-3 p-3 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-md">
                             <p className="text-sm text-blue-800 dark:text-blue-200">
