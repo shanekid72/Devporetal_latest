@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { FileSearch } from 'lucide-react';
 import ScrollRevealContainer from '../../../components/ScrollRevealContainer';
 import ApiEndpointCard from '../../../components/ApiEndpointCard';
+import AskPageSection from '../../../components/AskPageSection';
 import { ewaApiEndpoints } from '../../../data/ewaApiEndpoints';
 import { createApiTryItHandler } from '../../../utils/apiTryItHandler';
 
@@ -36,6 +37,11 @@ const GetSalaryAdvancePage = () => {
               {endpoint.description}
             </p>
           </motion.div>
+
+          {/* AskPage Section */}
+          <ScrollRevealContainer>
+            <AskPageSection showButtons={false} notebookUrl="https://notebooklm.google.com/notebook/09146d42-6d68-45e6-9f33-5a9587f9a2ad?authuser=5" />
+          </ScrollRevealContainer>
 
           {/* API Endpoint Card */}
           <motion.div

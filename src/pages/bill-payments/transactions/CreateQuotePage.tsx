@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { FileText } from 'lucide-react';
 import ScrollRevealContainer from '../../../components/ScrollRevealContainer';
 import ApiEndpointCard from '../../../components/ApiEndpointCard';
+import AskPageSection from '../../../components/AskPageSection';
 import { billPaymentsApiSections } from '../../../data/billPaymentsApiSections';
 import { createApiTryItHandler } from '../../../utils/apiTryItHandler';
 
@@ -51,6 +52,11 @@ const CreateQuotePage = () => {
               }
             />
           </motion.div>
+
+          {/* AskPage Section */}
+          <ScrollRevealContainer>
+            <AskPageSection showButtons={false} notebookUrl="https://notebooklm.google.com/notebook/51c6bfb1-107e-4eb7-a579-2311c9f4c738?authuser=5" />
+          </ScrollRevealContainer>
         </ScrollRevealContainer>
       </div>
     </div>

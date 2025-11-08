@@ -29,6 +29,8 @@ const BankPoliciesPage = lazy(() => import('./pages/BankPoliciesPage'));
 // Bill Payments pages
 const BillPaymentsIntroductionPage = lazy(() => import('./pages/bill-payments/BillPaymentsIntroductionPage'));
 const BillPaymentsAuthenticationPage = lazy(() => import('./pages/bill-payments/BillPaymentsAuthenticationPage'));
+const BillPaymentsMastersPage = lazy(() => import('./pages/bill-payments/BillPaymentsMastersPage'));
+const BillPaymentsTransactionsPage = lazy(() => import('./pages/bill-payments/BillPaymentsTransactionsPage'));
 const GetRatesPage = lazy(() => import('./pages/bill-payments/masters/GetRatesPage'));
 const GetCategoriesPage = lazy(() => import('./pages/bill-payments/masters/GetCategoriesPage'));
 const GetProvidersPage = lazy(() => import('./pages/bill-payments/masters/GetProvidersPage'));
@@ -207,6 +209,9 @@ function App() {
             <Route path="/integration/bill-payments/introduction" element={<BillPaymentsIntroductionPage />} />
             <Route path="/integration/bill-payments/authentication" element={<BillPaymentsAuthenticationPage />} />
             
+            {/* Bill Payments - Masters Listing Page */}
+            <Route path="/integration/bill-payments/masters" element={<BillPaymentsMastersPage />} />
+            
             {/* Bill Payments - Masters APIs */}
             <Route path="/integration/bill-payments/masters/get-rates" element={<GetRatesPage />} />
             <Route path="/integration/bill-payments/masters/get-categories" element={<GetCategoriesPage />} />
@@ -214,6 +219,9 @@ function App() {
             <Route path="/integration/bill-payments/masters/get-billers" element={<GetBillersPage />} />
             <Route path="/integration/bill-payments/masters/get-biller-custom-params" element={<GetBillerCustomParamsPage />} />
             <Route path="/integration/bill-payments/masters/get-biller-plans" element={<GetBillerPlansPage />} />
+            
+            {/* Bill Payments - Transactions Listing Page */}
+            <Route path="/integration/bill-payments/transactions" element={<BillPaymentsTransactionsPage />} />
             
             {/* Bill Payments - Transaction APIs */}
             <Route path="/integration/bill-payments/transactions/create-quote" element={<CreateQuotePage />} />
@@ -258,6 +266,9 @@ function App() {
             <Route path="/policies" element={<BankPoliciesPage />} />
             <Route path="/downloads" element={<PlaceholderPage />} />
             <Route path="/changelog" element={<PlaceholderPage />} />
+            
+            {/* Use Case - Coming Soon */}
+            <Route path="/use-case" element={<PlaceholderPage />} />
 
             {/* Catch-all */}
             <Route path="*" element={<Navigate to="/" replace />} />

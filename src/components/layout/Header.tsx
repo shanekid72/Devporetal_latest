@@ -23,11 +23,9 @@ const Header = ({ theme, onThemeToggle, onMenuClick, showHamburger = true }: Hea
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [integrationHover, setIntegrationHover] = useState(false);
-  const [useCaseHover, setUseCaseHover] = useState(false);
   
   const searchInputRef = useRef<HTMLInputElement>(null);
   const integrationTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const useCaseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -43,9 +41,6 @@ const Header = ({ theme, onThemeToggle, onMenuClick, showHamburger = true }: Hea
     { label: 'EWA', path: '/integration/ewa' },
   ];
 
-  const useCaseItems: Array<{ label: string; path: string }> = [
-    // Keep empty for future use
-  ];
 
   const directLinks = [
     { label: 'Support', path: '/support' },
@@ -124,28 +119,11 @@ const Header = ({ theme, onThemeToggle, onMenuClick, showHamburger = true }: Hea
     }, 250); // 250ms delay
   };
 
-  // Handle use case dropdown hover with delay
-  const handleUseCaseMouseEnter = () => {
-    if (useCaseTimeoutRef.current) {
-      clearTimeout(useCaseTimeoutRef.current);
-    }
-    setUseCaseHover(true);
-  };
-
-  const handleUseCaseMouseLeave = () => {
-    useCaseTimeoutRef.current = setTimeout(() => {
-      setUseCaseHover(false);
-    }, 250); // 250ms delay
-  };
-
   // Cleanup timeouts on unmount
   useEffect(() => {
     return () => {
       if (integrationTimeoutRef.current) {
         clearTimeout(integrationTimeoutRef.current);
-      }
-      if (useCaseTimeoutRef.current) {
-        clearTimeout(useCaseTimeoutRef.current);
       }
     };
   }, []);
@@ -249,56 +227,21 @@ const Header = ({ theme, onThemeToggle, onMenuClick, showHamburger = true }: Hea
               </AnimatePresence>
             </div>
 
-            {/* Use Case Dropdown */}
-            <div 
-              className="relative"
-              onMouseEnter={handleUseCaseMouseEnter}
-              onMouseLeave={handleUseCaseMouseLeave}
+            {/* Use Case Link */}
+            <motion.button
+              onClick={() => navigate('/use-case')}
+              className={clsx(
+                'px-3 py-2 text-sm font-medium rounded-md transition-all duration-200',
+                isActive('/use-case')
+                  ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
+                  : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800',
+                'interactive-glow'
+              )}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
             >
-              <button
-                className={clsx(
-                  'inline-flex items-center gap-1 px-3 py-2 text-sm font-medium rounded-md transition-all duration-200',
-                  isActive('/use-case')
-                    ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
-                    : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800',
-                  'interactive-glow'
-                )}
-              >
-                <span>Use Case</span>
-                <motion.div
-                  animate={{ rotate: useCaseHover ? 180 : 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <ChevronDown className="h-4 w-4" />
-                </motion.div>
-              </button>
-
-              <AnimatePresence>
-                {useCaseHover && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                    transition={{ duration: 0.1 }}
-                    className="absolute left-0 mt-2 w-48 origin-top-left rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
-                    onMouseEnter={handleUseCaseMouseEnter}
-                    onMouseLeave={handleUseCaseMouseLeave}
-                  >
-                    <div className="py-1">
-                      {useCaseItems.map((item) => (
-                        <button
-                          key={item.path}
-                          onClick={() => navigate(item.path)}
-                          className="block w-full text-left px-4 py-2 text-sm transition-colors text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100"
-                        >
-                          {item.label}
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+              Use Case
+            </motion.button>
 
             {/* Direct Links */}
             {directLinks.map((link) => {

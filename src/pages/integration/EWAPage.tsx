@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
+import AskPageSection from '../../components/AskPageSection';
+import ScrollRevealContainer from '../../components/ScrollRevealContainer';
 
 const EWAPage = () => {
   useEffect(() => {
@@ -99,6 +101,11 @@ const EWAPage = () => {
             </div>
           </motion.div>
         </div>
+
+        {/* AskPage Section */}
+        <ScrollRevealContainer>
+          <AskPageSection showButtons={false} notebookUrl="https://notebooklm.google.com/notebook/09146d42-6d68-45e6-9f33-5a9587f9a2ad?authuser=5" />
+        </ScrollRevealContainer>
       </motion.div>
     </div>
   );

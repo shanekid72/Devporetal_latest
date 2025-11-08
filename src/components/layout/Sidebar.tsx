@@ -119,8 +119,8 @@ const billPaymentsNavigationItems: NavigationItem[] = [
     title: 'Getting Started',
     icon: 'BookOpen',
     children: [
-      { id: 'bp-introduction', title: 'Introduction', href: '/bill-payments/introduction' },
-      { id: 'bp-authentication', title: 'Authentication', href: '/bill-payments/authentication' },
+      { id: 'bp-introduction', title: 'Introduction', href: '/integration/bill-payments/introduction' },
+      { id: 'bp-authentication', title: 'Authentication', href: '/integration/bill-payments/authentication' },
     ],
   },
   {
@@ -131,23 +131,25 @@ const billPaymentsNavigationItems: NavigationItem[] = [
       {
         id: 'bp-masters',
         title: 'Masters',
+        href: '/integration/bill-payments/masters',
         children: [
-          { id: 'bp-get-rates', title: 'Get Rates', href: '/bill-payments/masters/get-rates' },
-          { id: 'bp-get-categories', title: 'Get Categories', href: '/bill-payments/masters/get-categories' },
-          { id: 'bp-get-providers', title: 'Get Providers', href: '/bill-payments/masters/get-providers' },
-          { id: 'bp-get-billers', title: 'Get Billers', href: '/bill-payments/masters/get-billers' },
-          { id: 'bp-get-biller-params', title: 'Get Biller Custom Params', href: '/bill-payments/masters/get-biller-custom-params' },
-          { id: 'bp-get-biller-plans', title: 'Get Biller Plans', href: '/bill-payments/masters/get-biller-plans' },
+          { id: 'bp-get-rates', title: 'Get Rates', href: '/integration/bill-payments/masters/get-rates' },
+          { id: 'bp-get-categories', title: 'Get Categories', href: '/integration/bill-payments/masters/get-categories' },
+          { id: 'bp-get-providers', title: 'Get Providers', href: '/integration/bill-payments/masters/get-providers' },
+          { id: 'bp-get-billers', title: 'Get Billers', href: '/integration/bill-payments/masters/get-billers' },
+          { id: 'bp-get-biller-params', title: 'Get Biller Custom Params', href: '/integration/bill-payments/masters/get-biller-custom-params' },
+          { id: 'bp-get-biller-plans', title: 'Get Biller Plans', href: '/integration/bill-payments/masters/get-biller-plans' },
         ],
       },
       {
         id: 'bp-transactions',
         title: 'Transactions',
+        href: '/integration/bill-payments/transactions',
         children: [
-          { id: 'bp-create-quote', title: 'Create Quote', href: '/bill-payments/transactions/create-quote' },
-          { id: 'bp-create-transaction', title: 'Create Transaction', href: '/bill-payments/transactions/create-transaction' },
-          { id: 'bp-confirm-transaction', title: 'Confirm Transaction', href: '/bill-payments/transactions/confirm-transaction' },
-          { id: 'bp-enquire-transaction', title: 'Enquire Transaction', href: '/bill-payments/transactions/enquire-transaction' },
+          { id: 'bp-create-quote', title: 'Create Quote', href: '/integration/bill-payments/transactions/create-quote' },
+          { id: 'bp-create-transaction', title: 'Create Transaction', href: '/integration/bill-payments/transactions/create-transaction' },
+          { id: 'bp-confirm-transaction', title: 'Confirm Transaction', href: '/integration/bill-payments/transactions/confirm-transaction' },
+          { id: 'bp-enquire-transaction', title: 'Enquire Transaction', href: '/integration/bill-payments/transactions/enquire-transaction' },
         ],
       },
     ],
@@ -428,7 +430,37 @@ const Sidebar = ({ onClose }: SidebarProps) => {
     const isExpanded = expandedItems.includes(item.id);
     const hasChildren = item.children && item.children.length > 0;
     const parentActive = hasChildren && isParentActive(item.children!);
+    const hasHref = item.href && item.href !== '#';
 
+    // If item has both href and children, make it clickable without arrow icon
+    if (hasChildren && hasHref) {
+      return (
+        <div key={item.id} className="mb-1">
+          <Link
+            to={item.href!}
+            onClick={onClose}
+            className={clsx(
+              'nav-item w-full interactive-glow font-display',
+              isActive(item.href!) && 'active'
+            )}
+          >
+            <div className="flex items-center space-x-3">
+              {item.icon && (
+                <motion.div
+                  whileHover={{ rotate: 10, scale: 1.1 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <Icon className="h-5 w-5" />
+                </motion.div>
+              )}
+              <span className="whitespace-nowrap">{item.title}</span>
+            </div>
+          </Link>
+        </div>
+      );
+    }
+
+    // If item has children but no href, render as collapsible
     if (hasChildren) {
       return (
         <div key={item.id} className="mb-1">
@@ -480,6 +512,7 @@ const Sidebar = ({ onClose }: SidebarProps) => {
       );
     }
 
+    // If item has no children, render as link
     return (
       <motion.div
         key={item.id}

@@ -38,11 +38,6 @@ const EWAAuthenticationPage: React.FC<EWAAuthenticationPageProps> = ({ theme = {
         </div>
       </ScrollRevealContainer>
 
-      {/* AskPage Section */}
-      <ScrollRevealContainer>
-        <AskPageSection showButtons={false} notebookUrl="https://notebooklm.google.com/notebook/09146d42-6d68-45e6-9f33-5a9587f9a2ad?authuser=5" />
-      </ScrollRevealContainer>
-
       <ScrollRevealContainer>
         <section className="mb-12">
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
@@ -94,6 +89,11 @@ const EWAAuthenticationPage: React.FC<EWAAuthenticationPageProps> = ({ theme = {
               The endpoint returns a JSON object containing the access token, refresh token, and expiration details.
             </p>
           </div>
+
+          {/* AskPage Section */}
+          <ScrollRevealContainer>
+            <AskPageSection showButtons={false} notebookUrl="https://notebooklm.google.com/notebook/09146d42-6d68-45e6-9f33-5a9587f9a2ad?authuser=5" />
+          </ScrollRevealContainer>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
